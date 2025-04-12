@@ -86,6 +86,7 @@ export enum Domain {
   CLIMATE = 'climate',
   LOCK = 'lock',
   AUTOMATION = 'automation',
+  TIMER = 'timer',
 }
 
 export const ActionButtonConfigDefault: ActionButtonConfig = {
@@ -210,6 +211,16 @@ export const SliderConfigDefaultDomain: Map<string, SliderConfig> = new Map([
   [Domain.CLIMATE, {
     direction: SliderDirections.LEFT_RIGHT,
     background: SliderBackground.TRIANGLE,
+    use_state_color: false,
+    use_percentage_bg_opacity: false,
+    show_track: true,
+    toggle_on_click: false,
+    force_square: false,
+    show_attribute: false,
+  }],
+  [Domain.TIMER, {
+    direction: SliderDirections.LEFT_RIGHT,
+    background: SliderBackground.SOLID,
     use_state_color: false,
     use_percentage_bg_opacity: false,
     show_track: true,

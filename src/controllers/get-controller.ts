@@ -12,6 +12,7 @@ import { LockController } from './lock-controller';
 import { MediaController } from './media-controller';
 import { SwitchController } from './switch-controller';
 import { NumberController } from './number-controller';
+import { TimerController } from './timer-controller';
 
 export class ControllerFactory {
   static getInstance(config: SliderButtonCardConfig): Controller {
@@ -28,6 +29,7 @@ export class ControllerFactory {
       [Domain.NUMBER]: NumberController,
       [Domain.CLIMATE]: ClimateController,
       [Domain.LOCK]: LockController,
+      [Domain.TIMER]: TimerController,
     };
     if (typeof mapping[domain] === 'undefined') {
       throw new Error(`Unsupported entity type: ${domain}`)
