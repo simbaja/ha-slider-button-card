@@ -5,7 +5,10 @@ export class TimerController extends Controller {
   _step = 1;
   _targetValue;
   _invert = false;
-
+  
+  // TODO: Add a label showing the remaining time live
+  // TODO: Add live refresh of remaining time
+  
   constructor(config) {
     super(config);
     
@@ -90,18 +93,15 @@ export class TimerController extends Controller {
     }
   }
 
-  // TODO: What is this for?
   get _min(): number {
     return 0;
   }
 
-  // TODO: What is this for?
   get _max(): number {
     return 100;
   }
 
   // Helper method to convert HH:MM:SS time to milliseconds
-  // TODO: Is there a better way to do this? Feels like the timeer entity should have a seconds property
   private _timeToMs(timeString: string): number {
     if (!timeString) return 0;
     
