@@ -25,7 +25,7 @@ export class TimerController extends Controller {
     if (!this._interval) {
       this._interval = window.setInterval(() => {
         this._host.requestUpdate();
-      }, 1000);
+      }, 500);
     }
   }
 
@@ -51,7 +51,7 @@ export class TimerController extends Controller {
       const remainingMs = endsAtMs - Date.now();
       
       // Return percentage of time remaining
-      return Math.round((remainingMs / durationMs) * 100);
+      return Math.round((remainingMs / durationMs) * this._max);
     }
     
     // When paused, return the current percentage
@@ -59,12 +59,12 @@ export class TimerController extends Controller {
       const durationMs = this._timeToMs(this.stateObj.attributes.duration);
       const remainingMs = this._timeToMs(this.stateObj.attributes.remaining);
 
-      return Math.round((remainingMs / durationMs) * 100);
+      return Math.round((remainingMs / durationMs) * this._max);
     }
     
     if (this.state === 'idle') {
       // When idle, 100% should be left
-      return 100;
+      return this._max;
     }
     
     return 0;
@@ -82,7 +82,7 @@ export class TimerController extends Controller {
   }
 
   get _max(): number {
-    return 100;
+    return 10000;
   }
 
   // Helper method to convert HH:MM:SS time to milliseconds
