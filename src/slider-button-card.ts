@@ -451,9 +451,6 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
 
   connectedCallback(): void {
     super.connectedCallback();
-    
-    // TODO: Will need to set up an interval here to refresh remaining time live. Could do this conditionally based on entity type, 
-    // or add a controller method to handle any controller specific callbacks to be registered
   }
 
   disconnectedCallback(): void {
