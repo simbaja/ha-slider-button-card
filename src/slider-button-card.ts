@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ActionHandlerEvent, applyThemesOnElement, computeStateDomain, handleAction, hasConfigOrEntityChanged, HomeAssistant, LovelaceCard, LovelaceCardEditor, STATES_OFF, toggleEntity } from 'custom-card-helpers';
 import copy from 'fast-copy';
-import { css, CSSResult, customElement, eventOptions, html, LitElement, property, PropertyValues, query, state, TemplateResult } from 'lit-element';
-import { classMap } from 'lit-html/directives/class-map';
-import { ifDefined } from 'lit-html/directives/if-defined';
-import { styleMap } from 'lit-html/directives/style-map';
+import { LitElement, html, css, CSSResult, TemplateResult, PropertyValues } from 'lit';
+import { customElement, eventOptions, property, query, state } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
+import { styleMap } from 'lit/directives/style-map.js';
 import { actionHandler } from './action-handler-directive';
 import { CARD_VERSION } from './const';
 import { Controller } from './controllers/controller';
@@ -93,7 +94,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
       debug: false,
       ...config
     };
-    this.ctrl = ControllerFactory.getInstance(this.config);
+    this.ctrl = ControllerFactory.getInstance(this.config, this);
   }
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {

@@ -3,6 +3,8 @@ import { HassEntity } from 'home-assistant-js-websocket';
 import { SliderBackground, SliderButtonCardConfig, SliderDirections } from '../types';
 import { getLightColorBasedOnTemperature, normalize, percentageToValue, toPercentage } from '../utils';
 
+import { ReactiveController, ReactiveControllerHost } from 'lit';
+
 export interface Style {
   icon: ObjectStyle;
   slider: ObjectStyle;
@@ -14,9 +16,10 @@ export interface ObjectStyle {
   rotateSpeed?: string;
 }
 
-export abstract class Controller {
+export abstract class Controller implements ReactiveController {
   _config: SliderButtonCardConfig;
   _hass: any;
+  _host: ReactiveControllerHost;
   _sliderPrevColor = '';
 
   abstract _value?: number;
@@ -26,9 +29,14 @@ export abstract class Controller {
   abstract _step?: number;
   abstract _invert?: boolean;
 
-  protected constructor(config: SliderButtonCardConfig) {
+  protected constructor(config: SliderButtonCardConfig, host: ReactiveControllerHost) {
     this._config = config;
+    this._host = host;
+    host.addController(this);
   }
+  
+  hostConnected?(): void {}
+  hostDisconnected?(): void {}
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;

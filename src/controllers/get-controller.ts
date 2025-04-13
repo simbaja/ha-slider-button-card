@@ -14,8 +14,10 @@ import { SwitchController } from './switch-controller';
 import { NumberController } from './number-controller';
 import { TimerController } from './timer-controller';
 
+import { ReactiveControllerHost } from 'lit';
+
 export class ControllerFactory {
-  static getInstance(config: SliderButtonCardConfig): Controller {
+  static getInstance(config: SliderButtonCardConfig, host: ReactiveControllerHost): Controller {
     const domain = computeDomain(config.entity);
     const mapping = {
       [Domain.LIGHT]: LightController,
@@ -34,6 +36,6 @@ export class ControllerFactory {
     if (typeof mapping[domain] === 'undefined') {
       throw new Error(`Unsupported entity type: ${domain}`)
     }
-    return new mapping[domain](config);
+    return new mapping[domain](config, host);
   }
 }
