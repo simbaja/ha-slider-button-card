@@ -4,6 +4,38 @@ export class TimerController extends Controller {
   _step = 1;
   _targetValue;
   _invert = false;
+  private _interval?: number;
+
+  hostConnected(): void {
+  }
+  
+  hostDisconnected(): void {
+    this._clearInterval();
+  }
+
+  hostUpdated(): void {
+    if (this.state === 'active') {
+      this._startInterval();
+    } else {
+      this._clearInterval();
+    }
+  }
+  
+  _startInterval(): void {
+    if (!this._interval) {
+      this._interval = window.setInterval(() => {
+        this._host.requestUpdate();
+      }, 1000);
+    }
+  }
+
+  _clearInterval(): void {
+    if (this._interval) {
+      window.clearInterval(this._interval);
+      this._interval = undefined;
+    }
+  }
+
   
   get _value(): number {
 

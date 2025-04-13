@@ -37,6 +37,12 @@ export abstract class Controller implements ReactiveController {
   
   hostConnected?(): void {}
   hostDisconnected?(): void {}
+  hostUpdated?(): void {}
+  
+  protected requestUpdate(): void {
+    console.log('requestUpdate');
+    this._host.requestUpdate();
+  }
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
@@ -71,7 +77,7 @@ export abstract class Controller implements ReactiveController {
   set value(value: number) {
     if (value !== this.value) {
       this._value = value;
-      // this._value = Math.round(value / this.step) * this.step;
+      this._host.requestUpdate();
     }
   }
 
