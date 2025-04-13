@@ -45,7 +45,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
   private changing = false;
   private changed = false;
   private ctrl!: Controller;
-  private actionTimeout?: NodeJS.Timeout;
+  private actionTimeout?: number;
 
   public static async getConfigElement(): Promise<LovelaceCardEditor> {
     return document.createElement('slider-button-card-editor');
@@ -336,8 +336,8 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
 
   private animateActionEnd(): void {
     if (this.action) {
-      clearTimeout(this.actionTimeout);
-      this.actionTimeout = setTimeout(()=> {
+      window.clearTimeout(this.actionTimeout);
+      this.actionTimeout = window.setTimeout(()=> {
         this.action?.classList.remove('loading');
       }, 750)
     }
