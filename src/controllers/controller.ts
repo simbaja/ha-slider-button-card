@@ -200,6 +200,7 @@ export abstract class Controller implements ReactiveController {
     return `brightness(${(this.percentage + 100) / 2}%)`;
   }
 
+  // TODO: Icon color based on state doesn't work for timers
   get iconColor(): string {
     if (this._config.icon?.use_state_color) {
       if (this.stateObj.attributes.hs_color) {

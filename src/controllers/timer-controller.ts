@@ -110,14 +110,18 @@ export class TimerController extends Controller {
     return this.state;
   }
   
+  get hasToggle(): boolean {
+    return false;
+  }
+  
+  // TODO: Should slider be usable to change remaining time?
   get hasSlider(): boolean {
     // The slider is used only for display, not for control
-    return true;
+    return false;
   }
 
-  // TODO: Should slider be usable to change remaining time?
   get isSliderDisabled(): boolean {
-    // The slider is always disabled for timers (read-only)
+    // The slider is always disabled for timers
     return true;
   }
 } 
