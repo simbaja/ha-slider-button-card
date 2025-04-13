@@ -1,33 +1,10 @@
 import { Controller } from './controller';
-import { ActionButtonMode } from '../types';
 
 export class TimerController extends Controller {
   _step = 1;
   _targetValue;
   _invert = false;
   
-  // TODO: Add a label showing the remaining time live
-  // TODO: Add live refresh of remaining time
-  
-  constructor(config) {
-    super(config);
-    
-    // TODO: Anything I need to to to add custom action support?
-    
-    // Override the default action button configuration for timers
-    if (this._config.action_button?.mode === ActionButtonMode.TOGGLE) {
-      // If using toggle mode, set the icon dynamically based on state
-      this._config.action_button.tap_action = {
-        action: 'call-service',
-        service: 'timer.cancel',
-        service_data: {
-          entity_id: this._config.entity,
-        },
-      };
-      this._config.action_button.icon = 'mdi:timer-off';
-    }
-  }
-
   get _value(): number {
 
     if (!this.stateObj) {
@@ -66,33 +43,8 @@ export class TimerController extends Controller {
     if (!this.stateObj) {
       return;
     }
-    
-    // TODO: Is this value setter the right place to handle actions like this?
-    
-    // Start, pause, or cancel timer based on context
-    const service = this._getServiceFromContext();
-    
-    this._hass.callService('timer', service, {
-      entity_id: this.stateObj.entity_id,
-    });
   }
   
-  // Determine which service to call based on current state
-  private _getServiceFromContext(): string {
-    // TODO: Double check the logic here
-
-    switch(this.state) {
-      case 'idle':
-        return 'start';
-      case 'active':
-        return 'pause';
-      case 'paused':
-        return 'start'; // Resume
-      default:
-        return 'start';
-    }
-  }
-
   get _min(): number {
     return 0;
   }
@@ -109,7 +61,6 @@ export class TimerController extends Controller {
     return ((hours * 60 + minutes) * 60 + seconds) * 1000;
   }
 
-  // TODO: What is this for?
   get isOff(): boolean {
     return this.state === 'idle';
   }
@@ -126,52 +77,13 @@ export class TimerController extends Controller {
     
     return this.state;
   }
-
-  // TODO: Validate all the toggle related logic here
-
-  get hasToggle(): boolean {
-    return true;
-  }
-
-  get toggleValue(): number {
-    // Toggle logic for the action button
-    return this.value;
-  }
   
-  // Handle toggle action
-  _toggle(): void {
-    if (!this.stateObj) {
-      return;
-    }
-    
-    let service: string;
-    
-    // TODO: Duplicate code from _getServiceFromContext?
-    switch(this.state) {
-      case 'idle':
-        service = 'start';
-        break;
-      case 'active':
-        service = 'pause';
-        break;
-      case 'paused':
-        service = 'start'; // Resume
-        break;
-      default:
-        service = 'start';
-    }
-    
-    this._hass.callService('timer', service, {
-      entity_id: this.stateObj.entity_id,
-    });
-  }
-
   get hasSlider(): boolean {
     // The slider is used only for display, not for control
     return true;
   }
 
-  // TODO: Is that true? Should this be configurable? It may make sense to be able to update the timer's current duration?
+  // TODO: Should slider be usable to change remaining time?
   get isSliderDisabled(): boolean {
     // The slider is always disabled for timers (read-only)
     return true;
