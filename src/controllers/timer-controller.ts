@@ -146,23 +146,11 @@ export class TimerController extends Controller {
       };
     }
     
-    if (this.state === 'idle') {
+    if (this.state === 'idle' || this.state === 'paused') {
       return {
         tap_action: {
             action: 'call-service',
           service: 'timer.start',
-          service_data: {
-            entity_id: this._config.entity,
-          },
-        },
-      };
-    }
-    
-    if (this.state === 'paused') {
-      return {
-        tap_action: {
-          action: 'call-service',
-          service: 'timer.resume',
           service_data: {
             entity_id: this._config.entity,
           },
