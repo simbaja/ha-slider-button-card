@@ -124,4 +124,11 @@ export class TimerController extends Controller {
   get invert(): boolean {
     return true;
   }
+
+  get actionIcon(): string {
+    if (this.state === 'active') {
+      return 'mdi:pause';
+    }
+    return 'mdi:play';
+  }
 } 

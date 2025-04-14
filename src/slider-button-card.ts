@@ -282,7 +282,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
            >
         <ha-icon
           tabindex="-1"
-          .icon=${this.config.action_button?.icon || 'mdi:power'}
+          .icon=${this.config.action_button?.icon || this.ctrl.actionIcon || 'mdi:power'}
         ></ha-icon>
         ${typeof this.config.action_button?.show_spinner === 'undefined' || this.config.action_button?.show_spinner 
           ? html`

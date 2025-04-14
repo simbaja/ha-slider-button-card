@@ -253,6 +253,10 @@ export abstract class Controller implements ReactiveController {
     }
     return 'inherit';
   }
+  
+  get actionIcon(): string {
+    return '';
+  }
 
   moveSlider(event: any, {left, top, width, height}): number {
     let percentage = this.calcMovementPercentage(event, {left, top, width, height});
