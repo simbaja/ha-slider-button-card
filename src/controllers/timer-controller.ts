@@ -1,3 +1,4 @@
+import { ActionConfig, handleAction } from 'custom-card-helpers';
 import { Controller } from './controller';
 
 export class TimerController extends Controller {
@@ -130,5 +131,45 @@ export class TimerController extends Controller {
       return 'mdi:pause';
     }
     return 'mdi:play';
+  }
+
+  get defaultAction(): Parameters<typeof handleAction>[2] | undefined {
+    if (this.state === 'active') {
+      return {
+        tap_action: {
+          action: 'call-service',
+          service: 'timer.pause',
+          service_data: {
+            entity_id: this._config.entity,
+          },
+        },
+      };
+    }
+    
+    if (this.state === 'idle') {
+      return {
+        tap_action: {
+            action: 'call-service',
+          service: 'timer.start',
+          service_data: {
+            entity_id: this._config.entity,
+          },
+        },
+      };
+    }
+    
+    if (this.state === 'paused') {
+      return {
+        tap_action: {
+          action: 'call-service',
+          service: 'timer.resume',
+          service_data: {
+            entity_id: this._config.entity,
+          },
+        },
+      };
+    }
+
+    return undefined;
   }
 } 

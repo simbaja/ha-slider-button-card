@@ -1,6 +1,6 @@
-import { computeStateDomain, domainIcon, HomeAssistant } from 'custom-card-helpers';
+import { ActionConfig, computeStateDomain, domainIcon, handleAction, HomeAssistant } from 'custom-card-helpers';
 import { HassEntity } from 'home-assistant-js-websocket';
-import { SliderBackground, SliderButtonCardConfig, SliderDirections } from '../types';
+import { ActionButtonConfig, SliderBackground, SliderButtonCardConfig, SliderDirections } from '../types';
 import { getLightColorBasedOnTemperature, normalize, percentageToValue, toPercentage } from '../utils';
 
 import { ReactiveController, ReactiveControllerHost } from 'lit';
@@ -256,6 +256,11 @@ export abstract class Controller implements ReactiveController {
   
   get actionIcon(): string {
     return '';
+  }
+  
+  
+  get defaultAction(): Parameters<typeof handleAction>[2] | undefined {
+    return undefined;
   }
 
   moveSlider(event: any, {left, top, width, height}): number {

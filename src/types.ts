@@ -57,6 +57,7 @@ export interface SliderConfig {
 export enum ActionButtonMode {
   TOGGLE = 'toggle',
   CUSTOM = 'custom',
+  DEFAULT = 'default', // TODO: This feels meh
 }
 
 export enum SliderDirections {
