@@ -25,7 +25,7 @@ export class TimerController extends Controller {
     if (!this._interval) {
       this._interval = window.setInterval(() => {
         this._host.requestUpdate();
-      }, 500);
+      }, 250);
     }
   }
 
