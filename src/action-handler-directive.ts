@@ -187,7 +187,7 @@ export const actionHandlerBind = (element: ActionHandlerElement, options: Action
 };
 
 class ActionHandlerDirective extends Directive {
-  render(_options?: ActionHandlerOptions) {
+  render(_options?: ActionHandlerOptions): typeof noChange {
     return noChange;
   }
 

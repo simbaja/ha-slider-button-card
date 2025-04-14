@@ -40,7 +40,6 @@ export abstract class Controller implements ReactiveController {
   hostUpdated?(): void {}
   
   protected requestUpdate(): void {
-    console.log('requestUpdate');
     this._host.requestUpdate();
   }
 
@@ -166,7 +165,6 @@ export abstract class Controller implements ReactiveController {
 
   get percentage(): number {
     const percentage = ((this.targetValue - (this.invert ? this.max : this.min)) * 100) / (this.max - this.min) * (this.invert ? -1 : 1)
-
     // Round to 1 decimal place for a smoother slider
     return Math.round(percentage * 10) / 10;
   }
@@ -208,7 +206,7 @@ export abstract class Controller implements ReactiveController {
         if (sat > 10) {
           return `hsl(${hue}, 100%, ${100 - sat / 2}%)`;
         }
-      } else if (this.percentage > 0) {
+      } else if (this.invert ? this.percentage < 100 : this.percentage > 0) {
         return 'var(--paper-item-icon-active-color, #fdd835)'
       } else {
         return 'var(--paper-item-icon-color, #44739e)'

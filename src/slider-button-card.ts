@@ -310,7 +310,6 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
       this.animateActionStart();
       this.ctrl.log('Toggle');
       await toggleEntity(this.hass, this.config.entity);
-      // this.setStateValue(this.ctrl.toggleValue);
     }
   }
 

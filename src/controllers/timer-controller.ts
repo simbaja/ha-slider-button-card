@@ -38,7 +38,6 @@ export class TimerController extends Controller {
 
   
   get _value(): number {
-
     if (!this.stateObj) {
       return 0;
     }
@@ -49,22 +48,19 @@ export class TimerController extends Controller {
 
       const endsAtMs = Date.parse(this.stateObj.attributes.finishes_at);
       const remainingMs = endsAtMs - Date.now();
+      const ellapsedMs = Math.max(0, durationMs - remainingMs);
       
-      // Return percentage of time remaining
-      return Math.round((remainingMs / durationMs) * this._max);
+      // Return percentage of ellapsed time
+      return Math.round((ellapsedMs / durationMs) * this._max);
     }
     
     // When paused, return the current percentage
     if (this.state === 'paused') {
       const durationMs = this._timeToMs(this.stateObj.attributes.duration);
       const remainingMs = this._timeToMs(this.stateObj.attributes.remaining);
+      const ellapsedMs = Math.max(0, durationMs - remainingMs);
 
-      return Math.round((remainingMs / durationMs) * this._max);
-    }
-    
-    if (this.state === 'idle') {
-      // When idle, 100% should be left
-      return this._max;
+      return Math.round((ellapsedMs / durationMs) * this._max);
     }
     
     return 0;
@@ -122,6 +118,10 @@ export class TimerController extends Controller {
 
   get isSliderDisabled(): boolean {
     // The slider is always disabled for timers
+    return true;
+  }
+  
+  get invert(): boolean {
     return true;
   }
 } 
