@@ -23,6 +23,8 @@ export class TimerController extends Controller {
   }
   
   _startInterval(): void {
+    // TODO: Interval could be defined in the config
+    // TODO: Interval could be derived from the duration
     if (!this._interval) {
       this._interval = window.setInterval(() => {
         this._host.requestUpdate();
@@ -67,10 +69,37 @@ export class TimerController extends Controller {
     return 0;
   }
 
-  // Timer doesn't support setting values through the slider
   set _value(_value) {
+    // TODO: Setting the value should through the slider should update the timer's remaining time unless disabled
     if (!this.stateObj) {
       return;
+    }
+    
+    // Oh boy, timer semantics are a mess
+    // A timer is either idle, active or paused
+    // Available timer services: start, pause, cancel, finish, change
+    // Change can only be used to increment or decrement an ACTIVE timer with a delta. Delta can not be over the timer's initial duration.
+    // Change cannot be used if the timer is in any other state
+    
+    // Special case: If new value is 0, and state was activeve, or paused, finish the timer
+    //     What if the timer is idle?
+    // Special case: If new value is 100, and state was active, or paused, cancel the timer
+
+    if (this.state === 'active'){
+      // Compute the time delta between current remaining time and the new remaining time
+      // Call change with the delta (which must be a HH:MM:SS string)
+    }
+    
+    if (this.state === 'paused'){
+      // Make the timer active
+      // Call change with the delta (which must be a HH:MM:SS string)
+      // Pause the timer
+    }
+    
+    if (this.state === 'idle'){
+      // Make the timer active
+      // Call change with the delta (which must be a HH:MM:SS string)
+      // Pause the timer
     }
   }
   
