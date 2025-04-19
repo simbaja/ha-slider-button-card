@@ -258,7 +258,7 @@ export abstract class Controller implements ReactiveController {
     return '';
   }
   
-  
+  // TODO: Wire up default action for all controller types
   get defaultAction(): Parameters<typeof handleAction>[2] | undefined {
     return undefined;
   }

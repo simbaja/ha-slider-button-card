@@ -24,6 +24,8 @@ const languages: any = {
   sk: sk,
 };
 
+// TODO: Need to localize new default action button mode
+
 export function localize(string: string, search = '', replace = ''): string {
   const lang = (localStorage.getItem('selectedLanguage') || 'en').replace(/['"]+/g, '').replace('-', '_');
 

@@ -296,21 +296,28 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
   }
 
   private _handleAction(ev: ActionHandlerEvent, config): void {
-    if (!this.hass || !ev.detail.action) {
+    console.log(config)
+    if (!this.hass || !ev.detail.action || !this.config || this.ctrl.isUnavailable) {
+      console.log("Early return");
       return;
     }
-    
-    if (this.config) {
-      if (config.mode === 'default' && this.ctrl.defaultAction) {
-        handleAction(this, this.hass, this.ctrl.defaultAction, ev.detail.action);
-        return
-      }
 
-      if (config.tap_action?.action === 'toggle' && !this.ctrl.isUnavailable) {
-        this.animateActionStart();
-      }
+    // TODO: This is a bit clunky, feels like a hack to make the toggle animate when the 
+    // icon / action button action happens to be a toggle.
+    if (config.tap_action?.action === 'toggle') {
+      console.log("Toggle animate");
+      this.animateActionStart();
+    }
+
+    // TODO: This is all a little clunky, this method handles both icon & button actions, but some
+    // of the logic is now specific to the action button. Something needs to be refactored.
+    if (config.mode === ActionButtonMode.DEFAULT && this.ctrl.defaultAction) {
+      console.log("Default action");
+      handleAction(this, this.hass, this.ctrl.defaultAction, ev.detail.action);
+    } else {
+      console.log("Custom action");
       handleAction(this, this.hass, {...config, entity: this.config.entity}, ev.detail.action);
-    } 
+    }
   }
 
   private async handleClick(ev: Event): Promise<void> {

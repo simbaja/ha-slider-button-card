@@ -57,7 +57,7 @@ export interface SliderConfig {
 export enum ActionButtonMode {
   TOGGLE = 'toggle',
   CUSTOM = 'custom',
-  DEFAULT = 'default', // TODO: This feels meh
+  DEFAULT = 'default',
 }
 
 export enum SliderDirections {
@@ -91,13 +91,9 @@ export enum Domain {
 }
 
 export const ActionButtonConfigDefault: ActionButtonConfig = {
-  mode: ActionButtonMode.TOGGLE,
-  icon: 'mdi:power',
+  mode: ActionButtonMode.DEFAULT,
   show: true,
   show_spinner: true,
-  tap_action: {
-    action: 'toggle'
-  },
 };
 
 export const IconConfigDefault: IconConfig = {
