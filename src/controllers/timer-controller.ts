@@ -105,12 +105,14 @@ export class TimerController extends Controller {
       const targetRemainingMs = targetValue / 100 * durationMs;
       const deltaMs = targetRemainingMs - remainingMs;
 
+      /*
       console.log('remainingMs', remainingMs);
       console.log('remainingMsTime', this._msToTime(remainingMs));
       console.log('targetRemainingMs', targetRemainingMs);
       console.log('targetRemainingMsTime', this._msToTime(targetRemainingMs));
       console.log('deltaMs', deltaMs);
       console.log('deltaMsTime', this._msToTime(deltaMs));
+      */
 
       // Call change with the delta (which must be a HH:MM:SS string)
       this._hass.callService('timer', 'change', {
@@ -133,12 +135,14 @@ export class TimerController extends Controller {
       const targetRemainingMs = targetValue / 100 * durationMs;
       const deltaMs = targetRemainingMs - remainingMs;
 
+      /*
       console.log('remainingMs', remainingMs);
       console.log('remainingMsTime', this._msToTime(remainingMs));
       console.log('targetRemainingMs', targetRemainingMs);
       console.log('targetRemainingMsTime', this._msToTime(targetRemainingMs));
       console.log('deltaMs', deltaMs);
       console.log('deltaMsTime', this._msToTime(deltaMs));
+      */
 
       // Call change with the delta (which must be a HH:MM:SS string)
       this._hass.callService('timer', 'change', {
@@ -165,12 +169,14 @@ export class TimerController extends Controller {
       const targetRemainingMs = targetValue / 100 * durationMs;
       const deltaMs = targetRemainingMs - remainingMs;
 
+      /*
       console.log('remainingMs', remainingMs);
       console.log('remainingMsTime', this._msToTime(remainingMs));
       console.log('targetRemainingMs', targetRemainingMs);
       console.log('targetRemainingMsTime', this._msToTime(targetRemainingMs));
       console.log('deltaMs', deltaMs);
       console.log('deltaMsTime', this._msToTime(deltaMs));
+      */
 
       // Call change with the delta (which must be a HH:MM:SS string)
       this._hass.callService('timer', 'change', {

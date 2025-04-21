@@ -343,13 +343,12 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
     }
   }
 
-  // TODO: Need to protect against multiple invocation prevent any timeout from
-  // executing. This causes the loading icon to never disappears with frequent timer updates.
   private animateActionEnd(): void {
-    if (this.action) {
+    if (this.action && !this.actionTimeout) {
       window.clearTimeout(this.actionTimeout);
       this.actionTimeout = window.setTimeout(()=> {
         this.action?.classList.remove('loading');
+        this.actionTimeout = undefined;
       }, 750)
     }
   }
