@@ -44,6 +44,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
   @query('.slider') slider? : HTMLElement;
   private ctrl!: Controller;
   private actionTimeout?: number;
+  private changing = false;
 
   public static async getConfigElement(): Promise<LovelaceCardEditor> {
     return document.createElement('slider-button-card-editor');
@@ -95,7 +96,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
   }
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
-    if (!this.config) {
+    if (!this.config || this.changing) {
       return false;
     }
     const oldHass = changedProps.get('hass') as HomeAssistant | undefined;
@@ -342,6 +343,8 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
     }
   }
 
+  // TODO: Need to protect against multiple invocation prevent any timeout from
+  // executing. This causes the loading icon to never disappears with frequent timer updates.
   private animateActionEnd(): void {
     if (this.action) {
       window.clearTimeout(this.actionTimeout);
@@ -387,19 +390,9 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
     `;
   }
 
-  private getColorFromVariable(color: string): string {
-    if (typeof color !== 'undefined' && color.substring(0, 3) === 'var') {
-      let varColor = window.getComputedStyle(this).getPropertyValue(color.substring(4).slice(0, -1)).trim();
-      if (!varColor.length) {
-        varColor = window.getComputedStyle(document.documentElement).getPropertyValue(color.substring(4).slice(0, -1)).trim();
-      }
-      return varColor
-    }
-    return color;
-  }
-
   @eventOptions({passive: true})
   private onPointerDown(event: PointerEvent): void {
+    this.changing = true;
     if (this.config.slider?.direction === SliderDirections.TOP_BOTTOM
       || this.config.slider?.direction === SliderDirections.BOTTOM_TOP) {
         event.preventDefault();
@@ -413,6 +406,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
 
   @eventOptions({passive: true})
   private onPointerUp(event: PointerEvent): void {
+    this.changing = false;
     if (this.ctrl.isSliderDisabled) {
       return;
     }

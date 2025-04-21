@@ -73,11 +73,12 @@ export class TimerController extends Controller {
     return 0;
   }
 
-  set _value(_value) {
-    // TODO: Setting the value should through the slider should update the timer's remaining time unless disabled
+  set _value(valueAsPercent) {
     if (!this.stateObj) {
       return;
     }
+
+    const targetValue = 100 - valueAsPercent;
     
     // Oh boy, timer semantics are a mess
     // A timer is either idle, active or paused
@@ -85,25 +86,103 @@ export class TimerController extends Controller {
     // Change can only be used to increment or decrement an ACTIVE timer with a delta. Delta can not be over the timer's initial duration.
     // Change cannot be used if the timer is in any other state
     
-    // Special case: If new value is 0, and state was activeve, or paused, finish the timer
-    //     What if the timer is idle?
-    // Special case: If new value is 100, and state was active, or paused, cancel the timer
+    // TODO: De-duplicate code below
+
+    if (targetValue === 0 && (this.state === 'active' || this.state === 'paused')){
+      console.log('Finishing timer');
+      this._hass.callService('timer', 'finish', {
+        entity_id: this._config.entity,
+      });
+      return;
+    }
 
     if (this.state === 'active'){
       // Compute the time delta between current remaining time and the new remaining time
+      const durationMs = this._timeToMs(this.stateObj.attributes.duration);
+      const endsAtMs = Date.parse(this.stateObj.attributes.finishes_at);
+      const remainingMs = endsAtMs - Date.now();
+
+      const targetRemainingMs = targetValue / 100 * durationMs;
+      const deltaMs = targetRemainingMs - remainingMs;
+
+      console.log('remainingMs', remainingMs);
+      console.log('remainingMsTime', this._msToTime(remainingMs));
+      console.log('targetRemainingMs', targetRemainingMs);
+      console.log('targetRemainingMsTime', this._msToTime(targetRemainingMs));
+      console.log('deltaMs', deltaMs);
+      console.log('deltaMsTime', this._msToTime(deltaMs));
+
       // Call change with the delta (which must be a HH:MM:SS string)
+      this._hass.callService('timer', 'change', {
+        entity_id: this._config.entity,
+        duration: this._msToTime(deltaMs),
+      });
+
+      return;
     }
     
     if (this.state === 'paused'){
-      // Make the timer active
+      this._hass.callService('timer', 'start', {
+        entity_id: this._config.entity,
+      });
+
+      // Compute the time delta between current remaining time and the new remaining time
+      const durationMs = this._timeToMs(this.stateObj.attributes.duration);
+      const remainingMs = this._timeToMs(this.stateObj.attributes.remaining);
+
+      const targetRemainingMs = targetValue / 100 * durationMs;
+      const deltaMs = targetRemainingMs - remainingMs;
+
+      console.log('remainingMs', remainingMs);
+      console.log('remainingMsTime', this._msToTime(remainingMs));
+      console.log('targetRemainingMs', targetRemainingMs);
+      console.log('targetRemainingMsTime', this._msToTime(targetRemainingMs));
+      console.log('deltaMs', deltaMs);
+      console.log('deltaMsTime', this._msToTime(deltaMs));
+
       // Call change with the delta (which must be a HH:MM:SS string)
-      // Pause the timer
+      this._hass.callService('timer', 'change', {
+        entity_id: this._config.entity,
+        duration: this._msToTime(deltaMs),
+      });
+
+      this._hass.callService('timer', 'pause', {
+        entity_id: this._config.entity,
+      });
+
+      return;
     }
     
     if (this.state === 'idle'){
-      // Make the timer active
+      this._hass.callService('timer', 'start', {
+        entity_id: this._config.entity,
+      });
+
+      // Compute the time delta between current remaining time and the new remaining time
+      const durationMs = this._timeToMs(this.stateObj.attributes.duration);
+      const remainingMs = durationMs;
+
+      const targetRemainingMs = targetValue / 100 * durationMs;
+      const deltaMs = targetRemainingMs - remainingMs;
+
+      console.log('remainingMs', remainingMs);
+      console.log('remainingMsTime', this._msToTime(remainingMs));
+      console.log('targetRemainingMs', targetRemainingMs);
+      console.log('targetRemainingMsTime', this._msToTime(targetRemainingMs));
+      console.log('deltaMs', deltaMs);
+      console.log('deltaMsTime', this._msToTime(deltaMs));
+
       // Call change with the delta (which must be a HH:MM:SS string)
-      // Pause the timer
+      this._hass.callService('timer', 'change', {
+        entity_id: this._config.entity,
+        duration: this._msToTime(deltaMs),
+      });
+
+      this._hass.callService('timer', 'pause', {
+        entity_id: this._config.entity,
+      });
+
+      return;
     }
   }
   
@@ -111,8 +190,10 @@ export class TimerController extends Controller {
     return 0;
   }
 
+  // TODO: Setting this to >100 broke slider movements. Figure out why, fix it, and set back to 10000
+  // to get a much smoother slider movement.
   get _max(): number {
-    return 10000;
+    return 100;
   }
 
   // Helper method to convert HH:MM:SS time to milliseconds
@@ -125,11 +206,12 @@ export class TimerController extends Controller {
 
   private _msToTime(ms: number): string {
     const totalSeconds = Math.floor(ms / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
+    const sign = ms < 0 ? '-' : '';
+    const hours = Math.floor(Math.abs(totalSeconds) / 3600);
+    const minutes = Math.floor((Math.abs(totalSeconds) % 3600) / 60);
+    const seconds = Math.abs(totalSeconds) % 60;
     
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    return `${sign}${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   }
 
   get isOff(): boolean {
@@ -139,7 +221,7 @@ export class TimerController extends Controller {
   get label(): string {
     if (this.state === 'active') {
       const endsAtMs = Date.parse(this.stateObj.attributes.finishes_at);
-      const remainingMs = endsAtMs - Date.now();
+      const remainingMs = Math.max(endsAtMs - Date.now(), 0);
       return this._msToTime(remainingMs);
     }
     
@@ -150,23 +232,12 @@ export class TimerController extends Controller {
     if (this.state === 'idle') {
       return this._hass.localize('component.timer.entity_component._.state.idle') || 'Idle';
     }
-
     
     return this.state;
   }
   
   get hasToggle(): boolean {
     return false;
-  }
-  
-  get hasSlider(): boolean {
-    // The slider is used only for display, not for control
-    return false;
-  }
-
-  get isSliderDisabled(): boolean {
-    // The slider is always disabled for timers
-    return true;
   }
   
   get invert(): boolean {

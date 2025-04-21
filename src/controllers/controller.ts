@@ -150,6 +150,7 @@ export abstract class Controller implements ReactiveController {
   }
 
   get step(): number {
+    // TODO: There is no such thing as a step value under slider config.
     return this._config.slider?.step ?? this._step ?? 5;
   }
 
