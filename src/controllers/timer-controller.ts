@@ -27,7 +27,12 @@ export class TimerController extends Controller {
     // TODO: Interval could be derived from the duration
     if (!this._interval) {
       this._interval = window.setInterval(() => {
-        this._host.requestUpdate();
+        try {
+          this._host.requestUpdate();
+        } catch (e) {
+          // If the update fails, the component is likely disconnected
+          this._clearInterval();
+        }
       }, 250);
     }
   }
@@ -38,7 +43,6 @@ export class TimerController extends Controller {
       this._interval = undefined;
     }
   }
-
   
   get _value(): number {
     if (!this.stateObj) {
@@ -119,19 +123,34 @@ export class TimerController extends Controller {
     return ((hours * 60 + minutes) * 60 + seconds) * 1000;
   }
 
+  private _msToTime(ms: number): string {
+    const totalSeconds = Math.floor(ms / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+
   get isOff(): boolean {
     return this.state === 'idle';
   }
 
   get label(): string {
+    if (this.state === 'active') {
+      const endsAtMs = Date.parse(this.stateObj.attributes.finishes_at);
+      const remainingMs = endsAtMs - Date.now();
+      return this._msToTime(remainingMs);
+    }
+    
+    if (this.state === 'paused') {
+      return this.stateObj.attributes.remaining || '';
+    }
+
     if (this.state === 'idle') {
       return this._hass.localize('component.timer.entity_component._.state.idle') || 'Idle';
     }
-    
-    // If active or paused, show the remaining time
-    if (this.state === 'active' || this.state === 'paused') {
-      return this.stateObj.attributes.remaining || '';
-    }
+
     
     return this.state;
   }
@@ -140,7 +159,6 @@ export class TimerController extends Controller {
     return false;
   }
   
-  // TODO: Should slider be usable to change remaining time?
   get hasSlider(): boolean {
     // The slider is used only for display, not for control
     return false;

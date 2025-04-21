@@ -76,7 +76,6 @@ export abstract class Controller implements ReactiveController {
   set value(value: number) {
     if (value !== this.value) {
       this._value = value;
-      this._host.requestUpdate();
     }
   }
 
@@ -96,7 +95,6 @@ export abstract class Controller implements ReactiveController {
   set targetValue(value: number) {
     if (value !== this.targetValue) {
       this._targetValue = value;
-      // this._targetValue = Math.round(value / this.step) * this.step;
     }
   }
 

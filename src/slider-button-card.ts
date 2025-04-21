@@ -39,12 +39,9 @@ console.info(
 export class SliderButtonCard extends LitElement implements LovelaceCard {
   @property({attribute: false}) public hass!: HomeAssistant;
   @state() private config!: SliderButtonCardConfig;
-  @query('.state') stateText? : HTMLElement;
   @query('.button') button? : HTMLElement;
   @query('.action') action? : HTMLElement;
   @query('.slider') slider? : HTMLElement;
-  private changing = false;
-  private changed = false;
   private ctrl!: Controller;
   private actionTimeout?: number;
 
@@ -296,26 +293,21 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
   }
 
   private _handleAction(ev: ActionHandlerEvent, config): void {
-    console.log(config)
     if (!this.hass || !ev.detail.action || !this.config || this.ctrl.isUnavailable) {
-      console.log("Early return");
       return;
     }
 
     // TODO: This is a bit clunky, feels like a hack to make the toggle animate when the 
     // icon / action button action happens to be a toggle.
     if (config.tap_action?.action === 'toggle') {
-      console.log("Toggle animate");
       this.animateActionStart();
     }
 
     // TODO: This is all a little clunky, this method handles both icon & button actions, but some
     // of the logic is now specific to the action button. Something needs to be refactored.
     if (config.mode === ActionButtonMode.DEFAULT && this.ctrl.defaultAction) {
-      console.log("Default action");
       handleAction(this, this.hass, this.ctrl.defaultAction, ev.detail.action);
     } else {
-      console.log("Custom action");
       handleAction(this, this.hass, {...config, entity: this.config.entity}, ev.detail.action);
     }
   }
@@ -360,8 +352,6 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
   }
 
   private updateValue(value: number, changing = true): void {
-    this.changing = changing;
-    this.changed = !changing;
     this.ctrl.log('updateValue', value);
     this.ctrl.targetValue = value;
     if (!this.button) {
@@ -375,9 +365,6 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
       if (this.ctrl.isOff) {
         this.button.classList.add('off');
       }
-    }
-    if (this.stateText) {
-      this.stateText.innerHTML = this.ctrl.isUnavailable ? `${this.hass.localize('state.default.unavailable')}` : this.ctrl.label;
     }
     this.button.style.setProperty('--slider-value', `${this.ctrl.percentage}%`);
     this.button.style.setProperty('--slider-bg-filter', this.ctrl.style.slider.filter);
