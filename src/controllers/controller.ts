@@ -162,9 +162,13 @@ export abstract class Controller implements ReactiveController {
     return true;
   }
 
+  // TODO: It's a bit unclear percentage & targetValue are used for temporary slider values while it's 
+  // being dragged around. These variables could be renamed to clarify.
+
   get percentage(): number {
     const percentage = ((this.targetValue - (this.invert ? this.max : this.min)) * 100) / (this.max - this.min) * (this.invert ? -1 : 1)
     // Round to 1 decimal place for a smoother slider
+    console.log('percentage', percentage);
     return Math.round(percentage * 10) / 10;
   }
 
@@ -197,7 +201,6 @@ export abstract class Controller implements ReactiveController {
     return `brightness(${(this.percentage + 100) / 2}%)`;
   }
 
-  // TODO: Icon color based on state doesn't work for timers
   get iconColor(): string {
     if (this._config.icon?.use_state_color) {
       if (this.stateObj.attributes.hs_color) {

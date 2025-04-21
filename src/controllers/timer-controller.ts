@@ -73,12 +73,18 @@ export class TimerController extends Controller {
     return 0;
   }
 
-  set _value(valueAsPercent) {
+  // TODO: Am I handling out of bounds values properly?
+  // TODO: There's a lot of jank below
+  // TODO: De-duplicate code below
+
+  set _value(value) {
     if (!this.stateObj) {
       return;
     }
 
-    const targetValue = 100 - valueAsPercent;
+    // TODO: This is pretty jank
+    const percentage = value / this._max * 100;
+    const targetValue = 100 - percentage;
     
     // Oh boy, timer semantics are a mess
     // A timer is either idle, active or paused
@@ -86,8 +92,6 @@ export class TimerController extends Controller {
     // Change can only be used to increment or decrement an ACTIVE timer with a delta. Delta can not be over the timer's initial duration.
     // Change cannot be used if the timer is in any other state
     
-    // TODO: De-duplicate code below
-
     if (targetValue === 0 && (this.state === 'active' || this.state === 'paused')){
       console.log('Finishing timer');
       this._hass.callService('timer', 'finish', {
@@ -199,7 +203,7 @@ export class TimerController extends Controller {
   // TODO: Setting this to >100 broke slider movements. Figure out why, fix it, and set back to 10000
   // to get a much smoother slider movement.
   get _max(): number {
-    return 100;
+    return 10000;
   }
 
   // Helper method to convert HH:MM:SS time to milliseconds
@@ -224,6 +228,7 @@ export class TimerController extends Controller {
     return this.state === 'idle';
   }
 
+  // TODO: Using targetValue would allow the label to update as slider is dragged.
   get label(): string {
     if (this.state === 'active') {
       const endsAtMs = Date.parse(this.stateObj.attributes.finishes_at);

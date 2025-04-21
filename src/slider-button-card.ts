@@ -425,6 +425,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
   }
 
   private onPointerCancel(event: PointerEvent): void {
+    this.changing = false;
     if (this.config.slider?.direction === SliderDirections.TOP_BOTTOM
       || this.config.slider?.direction === SliderDirections.BOTTOM_TOP) {
         return;
@@ -442,7 +443,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
     const {left, top, width, height} = this.slider?.getBoundingClientRect();
     const percentage = this.ctrl.moveSlider(event, {left, top, width, height});
     this.ctrl.log('onPointerMove', percentage);
-    this.updateValue(percentage);
+    this.updateValue((percentage / 100) * this.ctrl.max);
   }
 
   connectedCallback(): void {
