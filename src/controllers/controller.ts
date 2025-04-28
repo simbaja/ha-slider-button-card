@@ -1,6 +1,6 @@
-import { computeStateDomain, domainIcon, handleAction, HomeAssistant } from 'custom-card-helpers';
+import { ActionConfig, computeStateDomain, domainIcon, handleAction, HomeAssistant } from 'custom-card-helpers';
 import { HassEntity } from 'home-assistant-js-websocket';
-import { SliderBackground, SliderButtonCardConfig, SliderDirections } from '../types';
+import { ActionButtonConfig, SliderBackground, SliderButtonCardConfig, SliderDirections } from '../types';
 import { getLightColorBasedOnTemperature, normalize, percentageToValue, toPercentage } from '../utils';
 
 import { ReactiveController, ReactiveControllerHost } from 'lit';
@@ -28,7 +28,6 @@ export abstract class Controller implements ReactiveController {
   abstract _max?: number;
   abstract _step?: number;
   abstract _invert?: boolean;
-  _isChanging?: boolean;
 
   protected constructor(config: SliderButtonCardConfig, host: ReactiveControllerHost) {
     this._config = config;
@@ -97,14 +96,6 @@ export abstract class Controller implements ReactiveController {
     if (value !== this.targetValue) {
       this._targetValue = value;
     }
-  }
-
-  get isChanging(): boolean {
-    return this._isChanging ?? false;
-  }
-
-  set isChanging(value: boolean) {
-    this._isChanging = value;
   }
 
   get label(): string {
@@ -177,6 +168,7 @@ export abstract class Controller implements ReactiveController {
   get percentage(): number {
     const percentage = ((this.targetValue - (this.invert ? this.max : this.min)) * 100) / (this.max - this.min) * (this.invert ? -1 : 1)
     // Round to 1 decimal place for a smoother slider
+    console.log('percentage', percentage);
     return Math.round(percentage * 10) / 10;
   }
 
