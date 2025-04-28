@@ -42,6 +42,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
   @query('.button') button? : HTMLElement;
   @query('.action') action? : HTMLElement;
   @query('.slider') slider? : HTMLElement;
+  @query('.state') state? : HTMLElement;
   private ctrl!: Controller;
   private actionTimeout?: number;
   private changing = false;
@@ -96,9 +97,16 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
   }
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
-    if (!this.config || this.changing) {
+    if (!this.config) {
       return false;
     }
+
+    // Ignore empty updates while the slider is updating
+    // TODO: Maybe rename this.changing to a more descriptive name.
+    if (this.changing) {
+      return true;
+    }
+
     const oldHass = changedProps.get('hass') as HomeAssistant | undefined;
     if (
       !oldHass ||
@@ -108,6 +116,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
       this.ctrl.log('shouldUpdate', 'forced true');
       return true;
     }
+
     return hasConfigOrEntityChanged(this, changedProps, false);
   }
 
@@ -374,6 +383,11 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
     this.button.style.setProperty('--icon-filter', this.ctrl.style.icon.filter);
     this.button.style.setProperty('--icon-color', this.ctrl.style.icon.color);
     this.button.style.setProperty('--icon-rotate-speed', this.ctrl.style.icon.rotateSpeed || '0s');
+    
+    // This sets the local reactive label property to rerender the label.
+    if (this.state) {
+      this.state.textContent = this.ctrl.label;
+    }
   }
 
   private _showError(error: string): TemplateResult {
@@ -392,6 +406,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
   @eventOptions({passive: true})
   private onPointerDown(event: PointerEvent): void {
     this.changing = true;
+    this.ctrl.isChanging = true;
     if (this.config.slider?.direction === SliderDirections.TOP_BOTTOM
       || this.config.slider?.direction === SliderDirections.BOTTOM_TOP) {
         event.preventDefault();
@@ -406,6 +421,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
   @eventOptions({passive: true})
   private onPointerUp(event: PointerEvent): void {
     this.changing = false;
+    this.ctrl.isChanging = false;
     if (this.ctrl.isSliderDisabled) {
       return;
     }
@@ -426,6 +442,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
 
   private onPointerCancel(event: PointerEvent): void {
     this.changing = false;
+    this.ctrl.isChanging = false;
     if (this.config.slider?.direction === SliderDirections.TOP_BOTTOM
       || this.config.slider?.direction === SliderDirections.BOTTOM_TOP) {
         return;
