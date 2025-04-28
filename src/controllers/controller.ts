@@ -168,7 +168,6 @@ export abstract class Controller implements ReactiveController {
   get percentage(): number {
     const percentage = ((this.targetValue - (this.invert ? this.max : this.min)) * 100) / (this.max - this.min) * (this.invert ? -1 : 1)
     // Round to 1 decimal place for a smoother slider
-    console.log('percentage', percentage);
     return Math.round(percentage * 10) / 10;
   }
 

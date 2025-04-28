@@ -93,7 +93,6 @@ export class TimerController extends Controller {
     // Change cannot be used if the timer is in any other state
     
     if (targetValue === 0 && (this.state === 'active' || this.state === 'paused')){
-      console.log('Finishing timer');
       this._hass.callService('timer', 'finish', {
         entity_id: this._config.entity,
       });
@@ -108,15 +107,6 @@ export class TimerController extends Controller {
 
       const targetRemainingMs = targetValue / 100 * durationMs;
       const deltaMs = targetRemainingMs - remainingMs;
-
-      /*
-      console.log('remainingMs', remainingMs);
-      console.log('remainingMsTime', this._msToTime(remainingMs));
-      console.log('targetRemainingMs', targetRemainingMs);
-      console.log('targetRemainingMsTime', this._msToTime(targetRemainingMs));
-      console.log('deltaMs', deltaMs);
-      console.log('deltaMsTime', this._msToTime(deltaMs));
-      */
 
       // Call change with the delta (which must be a HH:MM:SS string)
       this._hass.callService('timer', 'change', {
@@ -138,15 +128,6 @@ export class TimerController extends Controller {
 
       const targetRemainingMs = targetValue / 100 * durationMs;
       const deltaMs = targetRemainingMs - remainingMs;
-
-      /*
-      console.log('remainingMs', remainingMs);
-      console.log('remainingMsTime', this._msToTime(remainingMs));
-      console.log('targetRemainingMs', targetRemainingMs);
-      console.log('targetRemainingMsTime', this._msToTime(targetRemainingMs));
-      console.log('deltaMs', deltaMs);
-      console.log('deltaMsTime', this._msToTime(deltaMs));
-      */
 
       // Call change with the delta (which must be a HH:MM:SS string)
       this._hass.callService('timer', 'change', {
@@ -172,15 +153,6 @@ export class TimerController extends Controller {
 
       const targetRemainingMs = targetValue / 100 * durationMs;
       const deltaMs = targetRemainingMs - remainingMs;
-
-      /*
-      console.log('remainingMs', remainingMs);
-      console.log('remainingMsTime', this._msToTime(remainingMs));
-      console.log('targetRemainingMs', targetRemainingMs);
-      console.log('targetRemainingMsTime', this._msToTime(targetRemainingMs));
-      console.log('deltaMs', deltaMs);
-      console.log('deltaMsTime', this._msToTime(deltaMs));
-      */
 
       // Call change with the delta (which must be a HH:MM:SS string)
       this._hass.callService('timer', 'change', {
