@@ -44,7 +44,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
   @query('.slider') slider? : HTMLElement;
   private ctrl!: Controller;
   private actionTimeout?: number;
-  private changing = false;
+  private _updatePending = false;
 
   public static async getConfigElement(): Promise<LovelaceCardEditor> {
     return document.createElement('slider-button-card-editor');
@@ -96,7 +96,25 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
   }
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
-    if (!this.config || this.changing) {
+    if (this._updatePending) {
+      return false;
+    }
+
+    const shouldUpdate = this._evalShouldUpdateInternal(changedProps);
+    if (!shouldUpdate) {
+      return false;
+    }
+
+    this._updatePending = true;
+    setTimeout(() => {
+      this._updatePending = false;
+    }, 100);
+
+    return shouldUpdate;
+  }
+
+  private _evalShouldUpdateInternal(changedProps: PropertyValues): boolean {
+    if (!this.config) {
       return false;
     }
     const oldHass = changedProps.get('hass') as HomeAssistant | undefined;
@@ -331,7 +349,6 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
 
   private setStateValue(value: number): void {
     this.ctrl.log('setStateValue', value);
-    this.updateValue(value, false);
     this.ctrl.value = value;
     this.animateActionStart();
   }
@@ -355,7 +372,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
 
   private updateValue(value: number, changing = true): void {
     this.ctrl.log('updateValue', value);
-    this.ctrl.targetValue = value;
+
     if (!this.button) {
       return
     }
@@ -391,7 +408,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
 
   @eventOptions({passive: true})
   private onPointerDown(event: PointerEvent): void {
-    this.changing = true;
+    this.ctrl.isSliderDragging = true;
     if (this.config.slider?.direction === SliderDirections.TOP_BOTTOM
       || this.config.slider?.direction === SliderDirections.BOTTOM_TOP) {
         event.preventDefault();
@@ -405,7 +422,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
 
   @eventOptions({passive: true})
   private onPointerUp(event: PointerEvent): void {
-    this.changing = false;
+    this.ctrl.isSliderDragging = false;
     if (this.ctrl.isSliderDisabled) {
       return;
     }
@@ -425,12 +442,12 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
   }
 
   private onPointerCancel(event: PointerEvent): void {
-    this.changing = false;
+    this.ctrl.isSliderDragging = false;
     if (this.config.slider?.direction === SliderDirections.TOP_BOTTOM
       || this.config.slider?.direction === SliderDirections.BOTTOM_TOP) {
         return;
       }
-    this.updateValue(this.ctrl.value, false);
+    this.ctrl.targetValue = this.ctrl.value;
     this.slider?.releasePointerCapture(event.pointerId);
   }
 
@@ -443,7 +460,8 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
     const {left, top, width, height} = this.slider?.getBoundingClientRect();
     const percentage = this.ctrl.moveSlider(event, {left, top, width, height});
     this.ctrl.log('onPointerMove', percentage);
-    this.updateValue((percentage / 100) * this.ctrl.max);
+
+    this.ctrl.targetValue = (percentage / 100) * this.ctrl.max;
   }
 
   connectedCallback(): void {

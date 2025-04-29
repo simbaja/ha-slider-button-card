@@ -29,6 +29,8 @@ export abstract class Controller implements ReactiveController {
   abstract _step?: number;
   abstract _invert?: boolean;
 
+  private _isSliderDragging = false;
+
   protected constructor(config: SliderButtonCardConfig, host: ReactiveControllerHost) {
     this._config = config;
     this._host = host;
@@ -76,6 +78,7 @@ export abstract class Controller implements ReactiveController {
   set value(value: number) {
     if (value !== this.value) {
       this._value = value;
+      this.requestUpdate();
     }
   }
 
@@ -95,6 +98,7 @@ export abstract class Controller implements ReactiveController {
   set targetValue(value: number) {
     if (value !== this.targetValue) {
       this._targetValue = value;
+      this.requestUpdate();
     }
   }
 
@@ -330,5 +334,13 @@ export abstract class Controller implements ReactiveController {
     if (this._config.debug) {
       console.log(`${this._config.entity}: ${name}`, value)
     }
+  }
+
+  get isSliderDragging(): boolean {
+    return this._isSliderDragging;
+  }
+
+  set isSliderDragging(value: boolean) {
+    this._isSliderDragging = value;
   }
 }

@@ -23,12 +23,13 @@ export class TimerController extends Controller {
   }
   
   _startInterval(): void {
-    // TODO: Interval could be defined in the config
     // TODO: Interval could be derived from the duration
     if (!this._interval) {
       this._interval = window.setInterval(() => {
         try {
-          this._host.requestUpdate();
+          if (!this.isSliderDragging) {
+            this._host.requestUpdate();
+          }
         } catch (e) {
           // If the update fails, the component is likely disconnected
           this._clearInterval();
@@ -172,8 +173,6 @@ export class TimerController extends Controller {
     return 0;
   }
 
-  // TODO: Setting this to >100 broke slider movements. Figure out why, fix it, and set back to 10000
-  // to get a much smoother slider movement.
   get _max(): number {
     return 10000;
   }
@@ -200,16 +199,27 @@ export class TimerController extends Controller {
     return this.state === 'idle';
   }
 
-  // TODO: Using targetValue would allow the label to update as slider is dragged.
   get label(): string {
+    // When slider is being dragged, use targetValue as label
+    if (this.isSliderDragging){
+      const targetLeftRatio = 1 - (this.targetValue / this._max);
+      const durationMs = this._timeToMs(this.stateObj.attributes.duration);
+
+      const targetRemainingMs = targetLeftRatio * durationMs;
+      return this._msToTime(targetRemainingMs);
+    }
+
+    // When active, calculate remaining time as percentage of total duration
     if (this.state === 'active') {
       const endsAtMs = Date.parse(this.stateObj.attributes.finishes_at);
-      const remainingMs = Math.max(endsAtMs - Date.now(), 0);
+      const remainingMs = endsAtMs - Date.now();
       return this._msToTime(remainingMs);
     }
     
+    // When paused, return the current percentage
     if (this.state === 'paused') {
-      return this.stateObj.attributes.remaining || '';
+      const remainingMs = this._timeToMs(this.stateObj.attributes.remaining);
+      return this._msToTime(remainingMs);
     }
 
     if (this.state === 'idle') {
