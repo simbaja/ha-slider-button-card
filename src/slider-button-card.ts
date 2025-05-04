@@ -680,12 +680,8 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
       height: 1.3rem;
       width: 100%;
       overflow: hidden;
-      max-width: calc(100% - 4em);
       padding-top: 0;
     }
-    .compact.hide-action .text {         
-      max-width: calc(100% - 2em);      
-    }    
 
     /* --- LABEL --- */
     
@@ -705,7 +701,6 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
     }
     .compact .name {
       display: inline-block;   
-      max-width: calc(100% - 3.5em);
     }    
     
     /* --- STATE --- */
@@ -727,7 +722,6 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
       color: var(--disabled-text-color);
     }
     .compact .state {
-      max-width: calc(100% - 0em);
       overflow: hidden;
     }
     
@@ -740,14 +734,12 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
       overflow: hidden;
       white-space: nowrap;
       text-shadow: var(--state-text-shadow);
-      max-width: calc(50% -2em);
       transition: font-size 0.1s ease-in-out;
       border: 1px solid red; 
       */
     }
 
     .compact .attribute {
-      max-width: calc(100% - 0em);
       overflow: hidden;
     }
 
@@ -756,7 +748,6 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
-      max-width:  20px;
       width: 20px;
       text-shadow: var(--state-text-shadow);
       transition: font-size 0.1s ease-in-out;
