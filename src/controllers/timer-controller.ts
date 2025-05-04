@@ -271,4 +271,27 @@ export class TimerController extends Controller {
 
     return undefined;
   }
+
+  get secondaryActionIcon(): string {
+    if (this.state === 'active' || this.state === 'paused') {
+      return 'mdi:refresh';
+    }
+    return '';
+  }
+
+  get defaultSecondaryAction(): Parameters<typeof handleAction>[2] | undefined {
+    if (this.state === 'active' || this.state === 'paused') {
+      return {
+        tap_action: {
+          action: 'call-service',
+          service: 'timer.cancel',
+          service_data: {
+            entity_id: this._config.entity,
+          },
+        },
+      };
+    }
+
+    return undefined;
+  }
 } 

@@ -268,6 +268,15 @@ export abstract class Controller implements ReactiveController {
     return undefined;
   }
 
+  get secondaryActionIcon(): string {
+    return '';
+  }
+
+  // TODO: Wire up default secondary action for all controller types
+  get defaultSecondaryAction(): Parameters<typeof handleAction>[2] | undefined {
+    return undefined;
+  }
+
   moveSlider(event: any, {left, top, width, height}): number {
     let percentage = this.calcMovementPercentage(event, {left, top, width, height});
     percentage = this.applyStep(percentage);
