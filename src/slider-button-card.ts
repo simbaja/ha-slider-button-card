@@ -614,7 +614,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
       flex-direction: row;
       justify-content: left;
       position: relative;
-      gap: 0.2rem;
+      gap: 0.4rem;
       align-items: center;
       height: 100%;
       padding-left: 0.1rem;
