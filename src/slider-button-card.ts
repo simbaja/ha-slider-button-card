@@ -387,6 +387,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
     }
   }
 
+  // TODO: nit: Rename to something indicating this is only for setting the value as part of dragging slider.
   private setStateValue(value: number): void {
     this.ctrl.log('setStateValue', value);
     this.ctrl.value = value;

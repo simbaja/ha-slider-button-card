@@ -83,8 +83,6 @@ export abstract class Controller implements ReactiveController {
   }
 
   get targetValue(): number {
-    // TODO: This means once a target value is set by dragging, it'll be used as the value
-    // even if the slider is released. 
     if (this._targetValue !== undefined) {
       return Math.round(this._targetValue / this.step) * this.step;
     }
