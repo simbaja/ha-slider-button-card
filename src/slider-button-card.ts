@@ -594,6 +594,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
       justify-content: space-between;
       position: relative;
       height: 100%;
+      pointer-events: none;
     }
 
     .top-container {
