@@ -390,6 +390,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
   private setStateValue(value: number): void {
     this.ctrl.log('setStateValue', value);
     this.ctrl.value = value;
+    this.ctrl.resetTargetValue();
     this.animateActionStart();
   }
 
