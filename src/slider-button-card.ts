@@ -634,6 +634,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
       justify-content: right;
       align-items: right;
       position: relative;
+      pointer-events: auto;
     }
 
     /* --- ICON --- */
@@ -647,6 +648,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
       outline: none;
       animation: var(--icon-rotate-speed, 0s) linear 0s infinite normal both running rotate;
       -webkit-tap-highlight-color: transparent;
+      pointer-events: auto;
     }
     .icon ha-icon {
       filter: var(--icon-filter, brightness(100%));
