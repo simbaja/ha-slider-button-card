@@ -163,7 +163,6 @@ class ActionHandler extends HTMLElement implements ActionHandler {
   }
 }
 
-// TODO You need to replace all instances of "action-handler-boilerplate" with "action-handler-<your card name>"
 customElements.define('action-handler-slider-button', ActionHandler);
 
 const getActionHandler = (): ActionHandler => {
