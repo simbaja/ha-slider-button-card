@@ -59,7 +59,30 @@ describe('TimerController', () => {
     jest.clearAllMocks();
   });
 
-  describe('hostConnected and hostDisconnected', () => {
+  describe('hostConnected', () => {
+    it('should start interval if state is active', () => {
+      const setIntervalSpy = jest.spyOn(window, 'setInterval');
+      (mockHass.states as any)[mockConfig.entity] = {
+        ...mockStateObj,
+        state: 'active',
+      };
+      controller.hostConnected();
+      expect(setIntervalSpy).toHaveBeenCalled();
+    });
+
+    it('should clear interval if state is not active', () => {
+      const clearIntervalSpy = jest.spyOn(window, 'clearInterval');
+      controller['_startInterval'](); // Ensure interval is set
+      (mockHass.states as any)[mockConfig.entity] = {
+        ...mockStateObj,
+        state: 'idle',
+      };
+      controller.hostConnected();
+      expect(clearIntervalSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('hostDisconnected', () => {
     it('should clear interval on disconnect', () => {
       const clearIntervalSpy = jest.spyOn(window, 'clearInterval');
       controller['_startInterval'](); // Ensure interval is set
@@ -90,6 +113,7 @@ describe('TimerController', () => {
       expect(clearIntervalSpy).toHaveBeenCalled();
     });
   });
+
 
   describe('_value getter', () => {
     it('should return 0 when no state object exists', () => {

@@ -8,6 +8,7 @@ export class TimerController extends Controller {
   private _interval?: number;
 
   hostConnected(): void {
+    this._updateInterval();
   }
   
   hostDisconnected(): void {
@@ -15,11 +16,7 @@ export class TimerController extends Controller {
   }
 
   hostUpdated(): void {
-    if (this.state === 'active') {
-      this._startInterval();
-    } else {
-      this._clearInterval();
-    }
+    this._updateInterval();
   }
   
   _startInterval(): void {
@@ -293,5 +290,13 @@ export class TimerController extends Controller {
     }
 
     return undefined;
+  }
+
+  private _updateInterval(): void {
+    if (this.state === 'active') {
+      this._startInterval();
+    } else {
+      this._clearInterval();
+    }
   }
 } 
