@@ -1,4 +1,4 @@
-import { ActionConfig, handleAction } from 'custom-card-helpers';
+import { handleAction } from 'custom-card-helpers';
 import { Controller } from './controller';
 
 export class TimerController extends Controller {
