@@ -293,6 +293,11 @@ export class TimerController extends Controller {
   }
 
   private _updateInterval(): void {
+    // TODO: This check is to get around this.state not being null safe
+    if (!this._hass?.states) {
+      return;
+    }
+
     if (this.state === 'active') {
       this._startInterval();
     } else {

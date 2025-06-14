@@ -49,6 +49,7 @@ export abstract class Controller implements ReactiveController {
     this._hass = hass;
   }
 
+  // TODO: This isn't null safe can causing a bunch of downstream typing & runtime errors
   get stateObj(): any {
     return this._hass.states[this._config.entity] as HassEntity;
   }
