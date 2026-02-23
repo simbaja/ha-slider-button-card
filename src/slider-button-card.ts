@@ -134,7 +134,27 @@ export class SliderButtonCard extends LitElement {
     return hasConfigOrEntityChanged(this, changedProps, false);
   }
 
-  protected updated(changedProps: PropertyValues): void {
+  protected willUpdate(changedProps: PropertyValues): void {
+    super.willUpdate(changedProps);
+    if (!this.hass || !this.config) {
+      return;
+    }
+    const oldHass = changedProps.get('hass') as HomeAssistant | undefined;
+    const oldConfig = changedProps.get('config') as
+      | SliderButtonCardConfig
+      | undefined;
+    if (
+      !oldHass ||
+      oldHass.themes !== this.hass.themes ||
+      !oldConfig ||
+      oldConfig.theme !== this.config.theme
+    ) {
+      this.ctrl.log('Theme','willUpdate');
+      applyThemesOnElement(this, this.hass.themes, this.config.theme);
+    }
+  }
+
+  protected updated(_changedProps: PropertyValues): void {
     if (this.changing) {
       return;
     }
@@ -146,17 +166,6 @@ export class SliderButtonCard extends LitElement {
     }
     this.updateValue(this.ctrl.value, false);
     this.animateActionEnd();
-    const oldHass = changedProps.get('hass') as HomeAssistant | undefined;
-    const oldConfig = changedProps.get('config') as
-      | SliderButtonCardConfig
-      | undefined;
-    if (
-      oldHass?.themes !== this.hass.themes ||
-      oldConfig?.theme !== this.config.theme
-    ) {
-      this.ctrl.log('Theme','updated');
-      applyThemesOnElement(this, this.hass.themes, this.config.theme);
-    }
     this.ctrl.log('Updated', this.ctrl.value);
   }
 
