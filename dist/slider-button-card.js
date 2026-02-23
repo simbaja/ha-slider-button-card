@@ -1194,10 +1194,11 @@ function(t){return class extends t{createRenderRoot(){const t=this.constructor,{
         class="${ce({square:(null===(t=this.config.slider)||void 0===t?void 0:t.force_square)||!1,"hide-name":!this.config.show_name,"hide-state":!this.config.show_state,"hide-action":!(null===(e=this.config.action_button)||void 0===e?void 0:e.show),compact:!0===this.config.compact})}"
         data-mode="${null===(i=this.config.slider)||void 0===i?void 0:i.direction}"
       >
+        ${this.config.styles?Ut`<style>${this.config.styles}</style>`:""}
         <div class="button
               ${ce({off:this.ctrl.isOff,unavailable:this.ctrl.isUnavailable})}"
               data-mode="${null===(r=this.config.slider)||void 0===r?void 0:r.direction}"
-              style=${pe({"--slider-value":`${this.ctrl.percentage}%`,"--slider-bg-filter":this.ctrl.style.slider.filter,"--slider-color":this.ctrl.style.slider.color,"--icon-filter":this.ctrl.style.icon.filter,"--icon-color":this.ctrl.style.icon.color})}
+        style=${pe({"--slider-value":`${this.ctrl.percentage}%`,"--slider-bg-filter":this.ctrl.style.slider.filter,"--slider-color":this.ctrl.style.slider.color,"--icon-filter":this.ctrl.style.icon.filter,"--icon-color":this.ctrl.style.icon.color,"--slider-button-height":this.config.height||(this.config.compact?"3rem":"7rem")})}
              >
           <div class="slider"
                data-show-track="${null===(o=this.config.slider)||void 0===o?void 0:o.show_track}"
@@ -1306,9 +1307,9 @@ function(t){return class extends t{createRenderRoot(){const t=this.constructor,{
     `}onPointerDown(t){var e,i,r;this.ctrl.isSliderDragging=!0,(null===(e=this.config.slider)||void 0===e?void 0:e.direction)!==be.TOP_BOTTOM&&(null===(i=this.config.slider)||void 0===i?void 0:i.direction)!==be.BOTTOM_TOP||t.preventDefault(),t.stopPropagation(),this.ctrl.isSliderDisabled||(this.lastPush=void 0,this.startPercentage=void 0,null===(r=this.slider)||void 0===r||r.setPointerCapture(t.pointerId))}onPointerUp(t){var e,i,r,o,n;this.ctrl.isSliderDragging=!1,this.ctrl.isSliderDisabled||((null===(e=this.config.slider)||void 0===e?void 0:e.direction)!==be.TOP_BOTTOM&&(null===(i=this.config.slider)||void 0===i?void 0:i.direction)!==be.BOTTOM_TOP||(this.clearPostUpdateTimer(),this.setStateValue(this.ctrl.targetValue),null===(r=this.slider)||void 0===r||r.releasePointerCapture(t.pointerId)),(null===(o=this.slider)||void 0===o?void 0:o.hasPointerCapture(t.pointerId))&&(this.clearPostUpdateTimer(),this.setStateValue(this.ctrl.targetValue),null===(n=this.slider)||void 0===n||n.releasePointerCapture(t.pointerId)))}onPointerCancel(t){var e,i,r;this.ctrl.isSliderDragging=!1,(null===(e=this.config.slider)||void 0===e?void 0:e.direction)!==be.TOP_BOTTOM&&(null===(i=this.config.slider)||void 0===i?void 0:i.direction)!==be.BOTTOM_TOP&&(this.ctrl.targetValue=this.ctrl.value,null===(r=this.slider)||void 0===r||r.releasePointerCapture(t.pointerId))}clearPostUpdateTimer(){null!=this.postUpdateTimer&&(clearTimeout(this.postUpdateTimer),this.postUpdateTimer=void 0)}onPointerMove(t){var e,i,r;if(this.ctrl.isSliderDisabled)return;if(!(null===(e=this.slider)||void 0===e?void 0:e.hasPointerCapture(t.pointerId)))return;const{left:o,top:n,width:s,height:a}=null===(i=this.slider)||void 0===i?void 0:i.getBoundingClientRect(),l=this.ctrl.moveSlider(t,{left:o,top:n,width:s,height:a});if(void 0===this.startPercentage&&(this.startPercentage=l),Math.abs(l-this.startPercentage)<.5)return;if(this.ctrl.log("onPointerMove",l),this.updateValue(l),this.ctrl.targetValue=l/100*this.ctrl.max,this.clearPostUpdateTimer(),!(null===(r=this.config.slider)||void 0===r?void 0:r.change_during_slide))return;const d=this.config.slider.change_during_slide_rate||300,c=()=>{this.lastPush=Date.now(),this.setStateValue(this.ctrl.targetValue,!0)};null==this.lastPush&&(this.lastPush=Date.now()),Date.now()-this.lastPush>d?c():this.postUpdateTimer=window.setTimeout(()=>{c()},d)}connectedCallback(){super.connectedCallback()}disconnectedCallback(){super.disconnectedCallback()}static get styles(){return Z`
     ha-card {
       box-sizing: border-box;
-      height: 100%;
       width: 100%;
-      min-height: 7rem;
+      height: 100%;
+      min-height: var(--slider-button-height);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -1324,7 +1325,7 @@ function(t){return class extends t{createRenderRoot(){const t=this.constructor,{
       aspect-ratio: 1 / 1;
     }
     ha-card.compact {
-      min-height: 3rem !important;
+      min-height: var(--slider-button-height) !important;
     }    
     :host {
       --slider-bg-default-color: var(--primary-color, rgb(95, 124, 171));
@@ -1358,7 +1359,7 @@ function(t){return class extends t{createRenderRoot(){const t=this.constructor,{
       padding: 0.8rem;
       box-sizing: border-box;
       height: 100%;
-      min-height: 7rem;
+      min-height: var(--slider-button-height);
       width: 100%;
       display: block;
       overflow: hidden;

@@ -180,13 +180,14 @@ export class SliderButtonCard extends LitElement {
         <div class="button
               ${classMap({ off: this.ctrl.isOff, unavailable: this.ctrl.isUnavailable })}"
               data-mode="${this.config.slider?.direction}"
-              style=${styleMap({
-                '--slider-value': `${this.ctrl.percentage}%`,
-                '--slider-bg-filter': this.ctrl.style.slider.filter,
-                '--slider-color': this.ctrl.style.slider.color,
-                '--icon-filter': this.ctrl.style.icon.filter,
-                '--icon-color': this.ctrl.style.icon.color,
-              })}
+        style=${styleMap({
+          '--slider-value': `${this.ctrl.percentage}%`,
+          '--slider-bg-filter': this.ctrl.style.slider.filter,
+          '--slider-color': this.ctrl.style.slider.color,
+          '--icon-filter': this.ctrl.style.icon.filter,
+          '--icon-color': this.ctrl.style.icon.color,
+          '--slider-button-height': this.config.height || (this.config.compact ? '3rem' : '7rem'),
+        })}
              >
           <div class="slider"
                data-show-track="${this.config.slider?.show_track}"
@@ -579,9 +580,9 @@ export class SliderButtonCard extends LitElement {
     return css`
     ha-card {
       box-sizing: border-box;
-      height: 100%;
       width: 100%;
-      min-height: 7rem;
+      height: 100%;
+      min-height: var(--slider-button-height);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -597,7 +598,7 @@ export class SliderButtonCard extends LitElement {
       aspect-ratio: 1 / 1;
     }
     ha-card.compact {
-      min-height: 3rem !important;
+      min-height: var(--slider-button-height) !important;
     }    
     :host {
       --slider-bg-default-color: var(--primary-color, rgb(95, 124, 171));
@@ -631,7 +632,7 @@ export class SliderButtonCard extends LitElement {
       padding: 0.8rem;
       box-sizing: border-box;
       height: 100%;
-      min-height: 7rem;
+      min-height: var(--slider-button-height);
       width: 100%;
       display: block;
       overflow: hidden;
