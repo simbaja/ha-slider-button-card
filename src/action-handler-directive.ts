@@ -1,9 +1,9 @@
-import { directive, PropertyPart } from 'lit-html';
+
 
 import { ActionHandlerDetail, ActionHandlerOptions } from 'custom-card-helpers/dist/types';
 import { fireEvent } from 'custom-card-helpers';
 
-const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || ((navigator as unknown as { msMaxTouchPoints?: number }).msMaxTouchPoints || 0) > 0;
 
 interface ActionHandler extends HTMLElement {
   holdTime: number;
@@ -184,6 +184,23 @@ export const actionHandlerBind = (element: ActionHandlerElement, options: Action
   actionhandler.bind(element, options);
 };
 
-export const actionHandler = directive((options: ActionHandlerOptions = {}) => (part: PropertyPart): void => {
-  actionHandlerBind(part.committer.element as ActionHandlerElement, options);
-});
+import { noChange } from 'lit';
+import { AttributePart, directive, Directive, DirectiveParameters, PartInfo } from 'lit/directive.js';
+
+class ActionHandlerDirective extends Directive {
+  constructor(partInfo: PartInfo) {
+    super(partInfo);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  render(_options?: ActionHandlerOptions): typeof noChange {
+    return noChange;
+  }
+
+  update(part: AttributePart, [options]: DirectiveParameters<this>): typeof noChange {
+    actionHandlerBind(part.element as ActionHandlerElement, options || {});
+    return this.render(options);
+  }
+}
+
+export const actionHandler = directive(ActionHandlerDirective);

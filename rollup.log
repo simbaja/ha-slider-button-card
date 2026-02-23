@@ -1,0 +1,16 @@
+
+src/slider-button-card.ts ΓåÆ dist...
+[!] (plugin rpt2) Error: C:/Development/github_simbaja/ha-slider-button-card/src/action-handler-directive.ts(195,10): semantic error TS6133: 'options' is declared but its value is never read.
+src\action-handler-directive.ts
+Error: C:/Development/github_simbaja/ha-slider-button-card/src/action-handler-directive.ts(195,10): semantic error TS6133: 'options' is declared but its value is never read.
+    at error (C:\Development\github_simbaja\ha-slider-button-card\node_modules\rollup\dist\shared\node-entry.js:5400:30)
+    at throwPluginError (C:\Development\github_simbaja\ha-slider-button-card\node_modules\rollup\dist\shared\node-entry.js:11878:12)
+    at Object.error (C:\Development\github_simbaja\ha-slider-button-card\node_modules\rollup\dist\shared\node-entry.js:12912:24)
+    at Object.error (C:\Development\github_simbaja\ha-slider-button-card\node_modules\rollup\dist\shared\node-entry.js:12081:38)
+    at RollupContext.error (C:\Development\github_simbaja\ha-slider-button-card\node_modules\rollup-plugin-typescript2\src\rollupcontext.ts:37:18)
+    at C:\Development\github_simbaja\ha-slider-button-card\node_modules\rollup-plugin-typescript2\src\print-diagnostics.ts:41:11
+    at arrayEach (C:\Development\github_simbaja\ha-slider-button-card\node_modules\rollup-plugin-typescript2\node_modules\lodash\lodash.js:516:11)
+    at _.each (C:\Development\github_simbaja\ha-slider-button-card\node_modules\rollup-plugin-typescript2\node_modules\lodash\lodash.js:9342:14)
+    at printDiagnostics (C:\Development\github_simbaja\ha-slider-button-card\node_modules\rollup-plugin-typescript2\src\print-diagnostics.ts:9:2)
+    at Object.transform (C:\Development\github_simbaja\ha-slider-button-card\node_modules\rollup-plugin-typescript2\src\index.ts:234:5)
+
