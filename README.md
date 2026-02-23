@@ -2,7 +2,7 @@
 [![GitHub Release][releases-shield]][releases]
 [![hacs_badge](https://img.shields.io/badge/HACS-default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
 
-A button card with integrated slider for `automation, light, switch, fan, cover, input_boolean, input_number, media_player, number, climate, lock` entities.
+A button card with integrated slider for `automation, light, switch, fan, cover, input_boolean, input_number, media_player, number, climate, humidifier, lock` entities.
 
 ![Preview][preview]
 ![Preview 2][preview-2]
@@ -72,7 +72,7 @@ Slider Button Card supports Lovelace's Visual Editor.
 | Name              | Type    | Requirement  | Description                                 | Default             |
 | ----------------- | ------- | ------------ | ------------------------------------------- | ------------------- |
 | type              | string  | **Required** | `custom:slider-button-card`                   |
-| entity            | string  | **Required** | HA entity ID from domain `automation, light, switch, fan, cover, input_boolean, input_number, media_player, number climate, lock`                   |               |
+| entity            | string  | **Required** | HA entity ID from domain `automation, light, switch, fan, cover, input_boolean, input_number, media_player, number, climate, humidifier, lock`                   |               |
 | name              | string  | **Optional** | Name                                   | `entity.friendly_name`       |
 | show_attribute        | boolean | **Optional** | Show attribute  | `false` (except for `media_player` entities)            |
 | show_name        | boolean | **Optional** | Show name  | `true`             |
@@ -86,7 +86,7 @@ Slider Button Card supports Lovelace's Visual Editor.
 | Name          | Type    | Requirement  | Description                                                                                      | Default                |
 |---------------|---------|--------------|--------------------------------------------------------------------------------------------------|------------------------|
 | type          | string  | **Required** | `custom:slider-button-card`                                                                      |                        |
-| entity        | string  | **Required** | HA entity ID from domain `light, switch, fan, cover, input_boolean, media_player, climate, lock` |                        |
+| entity        | string  | **Required** | HA entity ID from domain `light, switch, fan, cover, input_boolean, media_player, climate, humidifier, lock` |                        |
 | name          | string  | **Optional** | Name                                                                                             | `entity.friendly_name` |
 | show_name     | boolean | **Optional** | Show name                                                                                        | `true`                 |
 | show_state    | boolean | **Optional** | Show state                                                                                       | `true`                 |

@@ -13,6 +13,7 @@ import { MediaController } from './media-controller';
 import { SwitchController } from './switch-controller';
 import { NumberController } from './number-controller';
 import { TimerController } from './timer-controller';
+import { HumidifierController } from './humidifier-controller';
 
 import { ReactiveControllerHost } from 'lit';
 
@@ -30,6 +31,7 @@ export class ControllerFactory {
       [Domain.MEDIA_PLAYER]: MediaController,
       [Domain.NUMBER]: NumberController,
       [Domain.CLIMATE]: ClimateController,
+      [Domain.HUMIDIFIER]: HumidifierController,
       [Domain.LOCK]: LockController,
       [Domain.TIMER]: TimerController,
     };
