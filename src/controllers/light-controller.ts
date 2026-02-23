@@ -84,7 +84,7 @@ export class LightController extends Controller {
     let _value;
     let service = value > 0 ? 'turn_on' : 'turn_off';
     let data = {
-      // eslint-disable-next-line @typescript-eslint/camelcase
+
       entity_id: this.stateObj.entity_id,
     }
     switch(attr) {

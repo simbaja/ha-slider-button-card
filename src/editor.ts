@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/camelcase */
-import copy from 'fast-copy';
+
+import { copy } from 'fast-copy';
 import {
   CSSResult,
   LitElement,
@@ -15,13 +15,13 @@ import { switchDefinition } from '../elements/switch';
 import { textfieldDefinition } from '../elements/textfield';
 
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
-import { ActionConfig, HomeAssistant, LovelaceCardEditor, computeDomain, fireEvent } from 'custom-card-helpers';
+import { ActionConfig, HomeAssistant, computeDomain, fireEvent } from 'custom-card-helpers';
 import { localize } from './localize/localize';
 import { ActionButtonConfig, ActionButtonConfigDefault, ActionButtonMode, Domain, IconConfig, IconConfigDefault, SliderBackground, SliderButtonCardConfig, SliderConfig, SliderConfigDefault, SliderDirections } from './types';
 import { applyPatch, getEnumValues, getSliderDefaultForEntity } from './utils';
 
 @customElement('slider-button-card-editor')
-export class SliderButtonCardEditor extends ScopedRegistryHost(LitElement) implements LovelaceCardEditor {
+export class SliderButtonCardEditor extends ScopedRegistryHost(LitElement) {
   @property({ attribute: false }) public hass?: HomeAssistant;
   
   @state() private _config?: SliderButtonCardConfig;
@@ -45,8 +45,8 @@ export class SliderButtonCardEditor extends ScopedRegistryHost(LitElement) imple
     this._loadHomeAssistantComponent("ha-selector", { type: "entities", entities: [] });
   }
 
-  async _loadHomeAssistantComponent(component: string, card: {}): Promise<void> {
-    const registry = (this.shadowRoot as any)?.customElements;
+  async _loadHomeAssistantComponent(component: string, card: Record<string, unknown>): Promise<void> {
+    const registry = ((this as any).shadowRoot as any)?.customElements;
     if (!registry || registry.get(component)) {
       return;
     } 
@@ -234,7 +234,7 @@ export class SliderButtonCardEditor extends ScopedRegistryHost(LitElement) imple
               <ha-selector
                 .hass=${this.hass}
                 .selector=${{
-                  ui_action: {}
+                  ui_action: {} as Record<string, unknown>
                 }}
                 .label="${localize('tabs.icon.tap_action')}"
                 .value=${this._icon.tap_action}
@@ -425,7 +425,7 @@ export class SliderButtonCardEditor extends ScopedRegistryHost(LitElement) imple
       const cfg = copy(this._config);
       applyPatch(cfg, ['slider'], getSliderDefaultForEntity(value));
       this._config = cfg;
-      fireEvent(this, 'config-changed', { config: this._config });
+      fireEvent(this as unknown as HTMLElement, 'config-changed', { config: this._config });
     }
   }
 
@@ -450,7 +450,7 @@ export class SliderButtonCardEditor extends ScopedRegistryHost(LitElement) imple
         delete this._config[configValue];
       }
     }
-    fireEvent(this, 'config-changed', { config: this._config });
+    fireEvent(this as unknown as HTMLElement, 'config-changed', { config: this._config });
   }
 
   static get styles(): CSSResult {

@@ -17,7 +17,7 @@ export class InputBooleanController extends Controller {
     const service = value > 0 ? 'turn_on' : 'turn_off';
 
     this.callService('input_boolean', service, {
-      // eslint-disable-next-line @typescript-eslint/camelcase
+
       entity_id: this.stateObj.entity_id
     });
   }

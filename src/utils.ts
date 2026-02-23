@@ -1,6 +1,6 @@
-import { tinycolor, TinyColor } from '@ctrl/tinycolor';
+import { TinyColor } from '@ctrl/tinycolor';
 import { computeDomain } from 'custom-card-helpers';
-import copy from 'fast-copy';
+import { copy } from 'fast-copy';
 import { Domain, SliderConfig, SliderConfigDefault, SliderConfigDefaultDomain } from './types';
 
 export function getEnumValues(enumeration): string[] {
@@ -25,21 +25,27 @@ export function getSliderDefaultForEntity(entity: string): SliderConfig {
   return copy(cfg);
 }
 
-export function getLightColorBasedOnTemperature(current: number, min: number, max: number): string {
-  const high = new TinyColor('rgb(255, 160, 0)'); // orange-ish
-  const low = new TinyColor('rgb(166, 209, 255)'); // blue-ish
-  const middle = new TinyColor('white');
-  const mixAmount = ((current - min) / (max - min)) * 100;
-  if (mixAmount < 50) {
-    return tinycolor(low)
-      .mix(middle, mixAmount * 2)
-      .toRgbString();
-  } else {
-    return tinycolor(middle)
-      .mix(high, (mixAmount - 50) * 2)
-      .toRgbString();
+export const getLightColorBasedOnTemperature = (current: number, min: number, max: number): string => {
+  const high = new TinyColor('rgb(255, 160, 0)'); // warm
+  const middle = new TinyColor('rgb(255, 255, 255)'); // natural
+  const low = new TinyColor('rgb(166, 209, 255)'); // cool
+
+  if (current >= max) {
+    return low.toRgbString();
   }
-}
+  if (current <= min) {
+    return high.toRgbString();
+  } else {
+    const mixAmount = ((current - min) / (max - min)) * 100;
+    if (mixAmount < 50) {
+      return new TinyColor(low)
+        .mix(middle, mixAmount * 2).toRgbString();
+    } else {
+      return new TinyColor(middle)
+        .mix(high, (mixAmount - 50) * 2).toRgbString();
+    }
+  }
+};
  export function toPercentage(value: number, min: number, max: number): number {
   return (((value - min) / max) * 100); //.toFixed(2);
 }

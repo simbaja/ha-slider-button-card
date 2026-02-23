@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/camelcase */
+
 import { Controller } from './controller';
 
 export class MediaController extends Controller {

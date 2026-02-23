@@ -12,7 +12,7 @@ export class ClimateController extends Controller {
 
   set _value(value) {
     this.callService('climate', 'set_temperature', {
-      // eslint-disable-next-line @typescript-eslint/camelcase
+
       entity_id: this.stateObj.entity_id,
       temperature: value,
     });

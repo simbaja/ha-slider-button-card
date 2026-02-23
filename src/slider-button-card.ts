@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ActionHandlerEvent, applyThemesOnElement, computeStateDomain, handleAction, hasConfigOrEntityChanged, HomeAssistant, LovelaceCard, LovelaceCardEditor, STATES_OFF, toggleEntity } from 'custom-card-helpers';
-import copy from 'fast-copy';
+import { ActionHandlerEvent, applyThemesOnElement, computeStateDomain, handleAction, hasConfigOrEntityChanged, HomeAssistant, LovelaceCardEditor, STATES_OFF, toggleEntity } from 'custom-card-helpers';
+import { copy } from 'fast-copy';
 import { LitElement, html, css, CSSResult, TemplateResult, PropertyValues } from 'lit';
 import { customElement, eventOptions, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -36,7 +36,7 @@ console.info(
 });
 
 @customElement('slider-button-card')
-export class SliderButtonCard extends LitElement implements LovelaceCard {
+export class SliderButtonCard extends LitElement {
   @property({attribute: false}) public hass!: HomeAssistant;
   @state() private config!: SliderButtonCardConfig;
   @query('.button') button? : HTMLElement;
@@ -60,13 +60,13 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
     return {
       entity: entity,
       slider: getSliderDefaultForEntity(entity),
-      // eslint-disable-next-line @typescript-eslint/camelcase
+
       show_name: true,
-      // eslint-disable-next-line @typescript-eslint/camelcase
+
       show_state: true,
       compact: false,
       icon: copy(IconConfigDefault),
-      // eslint-disable-next-line @typescript-eslint/camelcase
+
       action_button: copy(ActionButtonConfigDefault),
     };
   }
@@ -87,12 +87,12 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
     this.config = {
       slider: getSliderDefaultForEntity(config.entity),
       icon: copy(IconConfigDefault),
-      // eslint-disable-next-line @typescript-eslint/camelcase
+
       show_name: true,
-      // eslint-disable-next-line @typescript-eslint/camelcase
+
       show_state: true,
       compact: false,
-      // eslint-disable-next-line @typescript-eslint/camelcase
+
       action_button: copy(ActionButtonConfigDefault),
       debug: false,
       ...config
@@ -371,9 +371,9 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
     // TODO: This is all a little clunky, this method handles both icon & button actions, but some
     // of the logic is now specific to the action button. Something needs to be refactored.
     if (config.mode === ActionButtonMode.DEFAULT && this.ctrl.defaultAction) {
-      handleAction(this, this.hass, this.ctrl.defaultAction, ev.detail.action);
+      handleAction(this as unknown as HTMLElement, this.hass, this.ctrl.defaultAction, ev.detail.action);
     } else {
-      handleAction(this, this.hass, {...config, entity: this.config.entity}, ev.detail.action);
+      handleAction(this as unknown as HTMLElement, this.hass, {...config, entity: this.config.entity}, ev.detail.action);
     }
   }
 
@@ -381,7 +381,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
     console.log('handleSecondaryAction', ev);
     if (this.config.action_button?.mode === ActionButtonMode.DEFAULT && this.ctrl.defaultSecondaryAction) {
       console.log('defaultSecondaryAction', this.ctrl.defaultSecondaryAction);
-      handleAction(this, this.hass, this.ctrl.defaultSecondaryAction, ev.detail.action);
+      handleAction(this as unknown as HTMLElement, this.hass, this.ctrl.defaultSecondaryAction, ev.detail.action);
     }
   }
 
@@ -396,8 +396,8 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
 
   private _toggle(): void {
     if (this.hass && this.config) {
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      handleAction(this, this.hass, {tap_action: {action: 'toggle'}, entity: this.config.entity}, 'tap');
+
+      handleAction(this as unknown as HTMLElement, this.hass, {tap_action: {action: 'toggle'}, entity: this.config.entity}, 'tap');
     }
   }
 

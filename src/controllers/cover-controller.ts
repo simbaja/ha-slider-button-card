@@ -42,23 +42,23 @@ export class CoverController extends Controller {
     if (!this.hasSlider) {
       const service = value > 0 ? 'open_cover' : 'close_cover';
       this.callService('cover', service, {
-        // eslint-disable-next-line @typescript-eslint/camelcase
+
         entity_id: this.stateObj.entity_id
       });
     } else {
       switch(this.attribute) {
         case CoverAttributes.POSITION:
           this.callService('cover', 'set_cover_position', {
-            // eslint-disable-next-line @typescript-eslint/camelcase
+
             entity_id: this.stateObj.entity_id,
             position: value
           });
           break;
         case CoverAttributes.TILT:
           this.callService('cover', 'set_cover_tilt_position', {
-            // eslint-disable-next-line @typescript-eslint/camelcase
+
             entity_id: this.stateObj.entity_id,
-            // eslint-disable-next-line @typescript-eslint/camelcase
+
             tilt_position: value
           });
           break;

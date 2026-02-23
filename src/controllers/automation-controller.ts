@@ -16,7 +16,7 @@ export class AutomationController extends Controller {
   set _value(value) {
     const service = value > 0 ? 'turn_on' : 'turn_off';
     this._hass.callService('automation', service, {
-      // eslint-disable-next-line @typescript-eslint/camelcase
+
       entity_id: this.stateObj.entity_id
     });
   }

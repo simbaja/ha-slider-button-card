@@ -1,9 +1,9 @@
-import resolve from "rollup-plugin-node-resolve";
+import resolve from "@rollup/plugin-node-resolve";
 import typescript from "rollup-plugin-typescript2";
-import babel from "rollup-plugin-babel";
+import { babel } from "@rollup/plugin-babel";
 import serve from "rollup-plugin-serve";
-import { terser } from "rollup-plugin-terser";
-import ignoreWrapper  from './rollup-plugins/ignoreWrapper';
+import terser from "@rollup/plugin-terser";
+import ignoreWrapper  from './rollup-plugins/ignoreWrapper.js';
 import json from '@rollup/plugin-json';
 
 export default {
@@ -17,6 +17,7 @@ export default {
     typescript(),
     json(),
     babel({
+      babelHelpers: 'bundled',
       exclude: "node_modules/**",
     }),
     terser(),

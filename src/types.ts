@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/camelcase */
+
 import { ActionConfig, LovelaceCard, LovelaceCardConfig, LovelaceCardEditor } from 'custom-card-helpers';
 
 declare global {

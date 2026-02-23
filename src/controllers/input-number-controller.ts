@@ -10,7 +10,7 @@ export class InputNumberController extends Controller {
 
   set _value(value) {
     this._hass.callService('input_number', 'set_value', {
-      // eslint-disable-next-line @typescript-eslint/camelcase
+
       entity_id: this.stateObj.entity_id,
       value: value,
     });
