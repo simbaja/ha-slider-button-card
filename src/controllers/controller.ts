@@ -61,6 +61,61 @@ export abstract class Controller implements ReactiveController {
   abstract _step?: number;
   abstract _invert?: boolean;
 
+  _originalValue?: number;
+  _originalValueLock?: boolean;
+  _clickPosition?: number;
+  _clickPositionLock?: boolean;
+
+  set originalValue(value: number) {
+    this._originalValue = value;
+  }
+
+  get originalValue(): number {
+    if (this._originalValue === 0) {
+      return 0;
+    }
+    if (this._originalValue) {
+      return Math.round(this._originalValue / this.step) * this.step;
+    }
+    return 0;
+  }
+
+  get originalValueLock(): boolean {
+    if (this._originalValueLock === true) {
+      return true;
+    }
+    return false;
+  }
+
+  set originalValueLock(lock: boolean) {
+    this._originalValueLock = lock;
+  }
+
+  set clickPosition(value: number) {
+    this._clickPosition = value;
+  }
+
+  get clickPosition(): number {
+    if (this._clickPosition === 0) {
+      return 0;
+    }
+    if (this._clickPosition) {
+      return Math.round(this._clickPosition / this.step) * this.step;
+    }
+    return 0;
+  }
+
+  get clickPositionLock(): boolean {
+    if (this._clickPositionLock === true) {
+      return true;
+    }
+    return false;
+  }
+
+  set clickPositionLock(lock: boolean) {
+    this._clickPositionLock = lock;
+  }
+
   private _isSliderDragging = false;
 
   protected constructor(config: SliderButtonCardConfig, host: ReactiveControllerHost) {

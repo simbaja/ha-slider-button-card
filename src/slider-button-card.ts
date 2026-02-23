@@ -15,7 +15,7 @@ import { localize } from './localize/localize';
 
 import type { SliderButtonCardConfig } from './types';
 import { ActionButtonConfigDefault, ActionButtonMode, IconConfigDefault, SliderDirections } from './types';
-import { getSliderDefaultForEntity } from './utils';
+import { getSliderDefaultForEntity, normalize } from './utils';
 
 /* eslint no-console: 0 */
 console.info(
@@ -482,6 +482,11 @@ export class SliderButtonCard extends LitElement {
     this.lastPush = undefined;
     this.startPercentage = undefined;
     this.slider?.setPointerCapture(event.pointerId);
+
+    if (this.ctrl.originalValueLock !== true) {
+      this.ctrl.originalValue = this.ctrl.value;
+      this.ctrl.originalValueLock = true;
+    }
   }
 
   @eventOptions({passive: true})
@@ -495,6 +500,9 @@ export class SliderButtonCard extends LitElement {
         this.clearPostUpdateTimer();
         this.setStateValue(this.ctrl.targetValue);
         this.slider?.releasePointerCapture(event.pointerId);
+        
+        this.ctrl.originalValueLock = false;
+        this.ctrl.clickPositionLock = false;
       }
 
     if (!this.slider?.hasPointerCapture(event.pointerId)) {
@@ -504,6 +512,9 @@ export class SliderButtonCard extends LitElement {
     this.clearPostUpdateTimer();
     this.setStateValue(this.ctrl.targetValue);
     this.slider?.releasePointerCapture(event.pointerId);
+
+    this.ctrl.originalValueLock = false;
+    this.ctrl.clickPositionLock = false;
   }
 
   private onPointerCancel(event: PointerEvent): void {
@@ -514,6 +525,9 @@ export class SliderButtonCard extends LitElement {
       }
     this.ctrl.targetValue = this.ctrl.value;
     this.slider?.releasePointerCapture(event.pointerId);
+
+    this.ctrl.originalValueLock = false;
+    this.ctrl.clickPositionLock = false;
   }
 
   private clearPostUpdateTimer(): void {
@@ -541,10 +555,21 @@ export class SliderButtonCard extends LitElement {
       return;
     }
 
-    this.ctrl.log('onPointerMove', percentage);
+    if (this.ctrl.clickPositionLock !== true) {
+      this.ctrl.clickPosition = percentage;
+      this.ctrl.clickPositionLock = true;
+    }
+
+    const delta = this.ctrl.clickPosition - percentage;
+    let newValue = this.ctrl.originalValue - delta;
+    newValue = normalize(newValue, this.ctrl.min, this.ctrl.max);
+
+    this.ctrl.log('onPointerMove percentage', percentage);
+    this.ctrl.log('onPointerMove newValue', newValue);
     
-    this.updateValue(percentage);
-    this.ctrl.targetValue = (percentage / 100) * this.ctrl.max;
+    // Set targetValue before updateValue so that the UI can reflect the new target tracking
+    this.ctrl.targetValue = newValue;
+    this.updateValue(newValue);
 
     this.clearPostUpdateTimer();
 
