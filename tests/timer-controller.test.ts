@@ -1,7 +1,7 @@
-import { TimerController } from '../timer-controller';
+import { TimerController } from '../src/controllers/timer-controller';
 import { HomeAssistant } from 'custom-card-helpers';
 import { ReactiveControllerHost } from 'lit';
-import { SliderButtonCardConfig } from '../../types';
+import { SliderButtonCardConfig } from '../src/types';
 
 // Create a test-specific class to access the protected constructor
 class TestTimerController extends TimerController {

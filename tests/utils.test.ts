@@ -5,7 +5,7 @@ import {
   toPercentage,
   percentageToValue,
   capitalizeFirst,
-} from '../utils';
+} from '../src/utils';
 
 describe('Utility Functions', () => {
   describe('getEnumValues', () => {
