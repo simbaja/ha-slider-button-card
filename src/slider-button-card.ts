@@ -203,11 +203,25 @@ export class SliderButtonCard extends LitElement {
                data-mode="${this.config.slider?.direction}"
                data-background="${this.config.slider?.background}"
                data-is-toggle="${this.ctrl.hasToggle}"
-               @pointerdown=${this.onPointerDown}
+               @pointerdown=${(e): void => {
+                 (e.currentTarget as any).querySelector('mwc-ripple')?.startPress(e);
+                 this.onPointerDown(e);
+               }}
                @pointermove=${this.onPointerMove}
-               @pointerup=${this.onPointerUp}
-               @pointercancel=${this.onPointerCancel}
+               @pointerup=${(e): void => {
+                 (e.currentTarget as any).querySelector('mwc-ripple')?.endPress();
+                 this.onPointerUp(e);
+               }}
+               @pointercancel=${(e): void => {
+                 (e.currentTarget as any).querySelector('mwc-ripple')?.endPress();
+                 this.onPointerCancel(e);
+               }}
+               @mouseenter=${(e): void => (e.currentTarget as any).querySelector('mwc-ripple')?.startHover()}
+               @mouseleave=${(e): void => (e.currentTarget as any).querySelector('mwc-ripple')?.endHover()}
+               @focus=${(e): void => (e.currentTarget as any).querySelector('mwc-ripple')?.startFocus()}
+               @blur=${(e): void => (e.currentTarget as any).querySelector('mwc-ripple')?.endFocus()}
           >
+            <mwc-ripple></mwc-ripple>
             ${this.ctrl.hasToggle
               ? html`
                 <div class="toggle-overlay" @click=${this.handleClick}></div>
@@ -331,7 +345,15 @@ export class SliderButtonCard extends LitElement {
             hasHold: false,
             hasDoubleClick: false,
           })}           
+          @pointerdown=${(e): void => (e.currentTarget as any).querySelector('mwc-ripple')?.startPress(e)}
+          @pointerup=${(e): void => (e.currentTarget as any).querySelector('mwc-ripple')?.endPress()}
+          @pointercancel=${(e): void => (e.currentTarget as any).querySelector('mwc-ripple')?.endPress()}
+          @mouseenter=${(e): void => (e.currentTarget as any).querySelector('mwc-ripple')?.startHover()}
+          @mouseleave=${(e): void => (e.currentTarget as any).querySelector('mwc-ripple')?.endHover()}
+          @focus=${(e): void => (e.currentTarget as any).querySelector('mwc-ripple')?.startFocus()}
+          @blur=${(e): void => (e.currentTarget as any).querySelector('mwc-ripple')?.endFocus()}
           >
+        <mwc-ripple></mwc-ripple>
         <ha-icon
           tabindex="-1"
           .icon=${this.config.action_button?.icon || this.ctrl.actionIcon || 'mdi:power'}
@@ -352,7 +374,15 @@ export class SliderButtonCard extends LitElement {
             hasHold: false,
             hasDoubleClick: false,
           })}           
+          @pointerdown=${(e): void => (e.currentTarget as any).querySelector('mwc-ripple')?.startPress(e)}
+          @pointerup=${(e): void => (e.currentTarget as any).querySelector('mwc-ripple')?.endPress()}
+          @pointercancel=${(e): void => (e.currentTarget as any).querySelector('mwc-ripple')?.endPress()}
+          @mouseenter=${(e): void => (e.currentTarget as any).querySelector('mwc-ripple')?.startHover()}
+          @mouseleave=${(e): void => (e.currentTarget as any).querySelector('mwc-ripple')?.endHover()}
+          @focus=${(e): void => (e.currentTarget as any).querySelector('mwc-ripple')?.startFocus()}
+          @blur=${(e): void => (e.currentTarget as any).querySelector('mwc-ripple')?.endFocus()}
           >
+        <mwc-ripple></mwc-ripple>
         <ha-icon
           tabindex="-1"
           .icon=${this.ctrl.secondaryActionIcon || 'mdi:power'}
