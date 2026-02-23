@@ -71,6 +71,20 @@ export class CoverController extends Controller {
     return 1;
   }
 
+  get unit(): string {
+    if (!this.hasSlider) {
+      return '';
+    }
+    switch(this.attribute) {
+      case CoverAttributes.POSITION:
+        if (this.percentage === 0 || this.percentage === 100) {
+          return '';
+        }
+        return '%';
+    }
+    return '';
+  }
+
   get label(): string {
     const defaultLabel = this._hass.localize(`component.cover.entity_component._.state.${this.state}`);
     const closedLabel = this._hass.localize('component.cover.entity_component._.state.closed');
@@ -86,7 +100,7 @@ export class CoverController extends Controller {
         if (this.percentage === 100) {
           return this.invert ? closedLabel : openLabel;
         }
-        return `${this.percentage}%`;
+        return `${this.percentage}`;
       case CoverAttributes.TILT:
         return `${this.percentage}`;
     }

@@ -33,7 +33,7 @@ export class NumberController extends Controller {
   }
 
   get label(): string {
-    return this.stateObj.attributes.unit_of_measurement ? `${this.targetValue} ${this.stateObj.attributes.unit_of_measurement}` : `${this.targetValue}`;
+    return `${this.targetValue}`;
   }
 
 }

@@ -188,6 +188,21 @@ export class LightController extends Controller {
     }
   }
 
+  get unit(): string {
+    if (this.isOff || this.colorMode === LightColorModes.ON_OFF || this.attribute === LightAttributes.ON_OFF) {
+      return '';
+    }
+    switch(this.attribute) {
+      case LightAttributes.BRIGHTNESS_PCT:
+      case LightAttributes.SATURATION:
+        return '%';
+      case LightAttributes.HUE:
+        return '°';
+      default:
+        return '';
+    }
+  }
+
   get label(): string {
     if (this.isOff) {
       return this._hass.localize('component.light.entity_component._.state.off');
@@ -198,14 +213,6 @@ export class LightController extends Controller {
     switch(this.attribute) {
       case LightAttributes.ON_OFF:
         return this._hass.localize('component.light.entity_component._.state.on');
-      case LightAttributes.COLOR_TEMP:
-      case LightAttributes.BRIGHTNESS:
-        return `${this.targetValue}`;
-      case LightAttributes.BRIGHTNESS_PCT:
-      case LightAttributes.SATURATION:
-        return `${this.targetValue}%`;
-      case LightAttributes.HUE:
-        return `${this.targetValue}°`;
       default:
         return `${this.targetValue}`;
     }

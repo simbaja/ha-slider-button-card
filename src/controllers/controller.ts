@@ -140,6 +140,10 @@ export abstract class Controller implements ReactiveController {
     return `${this.targetValue}`;
   }
 
+  get unit(): string {
+    return this.stateObj?.attributes?.unit_of_measurement || '';
+  }
+
   get attributeLabel(): string {
     if (this._config.attribute) {
       return this.stateObj.attributes[this._config.attribute];

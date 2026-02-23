@@ -251,8 +251,9 @@ export class SliderButtonCard extends LitElement {
 
     const name = this.config.show_name ? html`<div class="name">${this.ctrl.name}</div>` : '';
     const stateStr = this.ctrl.isUnavailable ? this.hass.localize('state.default.unavailable') : this.ctrl.label;
+    const unitStr = this.ctrl.isUnavailable ? '' : this.ctrl.unit;
 
-    const state = this.config.show_state ? html`<span class="state">${stateStr}</span>` : '';
+    const state = this.config.show_state ? html`<span class="state">${stateStr}${unitStr ? html`<span class="unit">${unitStr}</span>` : ''}</span>` : '';
     const attribute = this.config.show_attribute ? html`<span class="attribute">${this.ctrl.attributeLabel}</span>` : '';
     const separator = this.config.show_state && this.config.show_attribute ? html`<span class="separator">·<span>` : '';
 
@@ -790,6 +791,14 @@ export class SliderButtonCard extends LitElement {
     }
     .compact .state {
       overflow: hidden;
+    }
+
+    /* --- UNIT --- */
+    
+    .unit {      
+      color: var(--unit-color, inherit);
+      font-size: var(--unit-font-size, inherit);
+      padding-left: 0.1rem;
     }
     
     /* --- ATTRIBUTE --- */

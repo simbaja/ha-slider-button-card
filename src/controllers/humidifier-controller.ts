@@ -37,8 +37,12 @@ export class HumidifierController extends Controller {
     return true;
   }
 
+  get unit(): string {
+    return '%';
+  }
+
   get label(): string {
     const mode = capitalizeFirst(this.state);
-    return `${this.targetValue}% | ${mode}`;
+    return `${this.targetValue} | ${mode}`;
   }
 }
