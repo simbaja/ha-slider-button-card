@@ -154,7 +154,7 @@ export class SliderButtonCard extends LitElement {
     }
   }
 
-  protected updated(_changedProps: PropertyValues): void {
+  protected updated(): void {
     if (this.changing) {
       return;
     }
