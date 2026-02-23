@@ -49,6 +49,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
   private _updatePending = false;
   private lastPush?: number;
   private postUpdateTimer?: number;
+  private startPercentage?: number;
 
   public static async getConfigElement(): Promise<LovelaceCardEditor> {
     return document.createElement('slider-button-card-editor');
@@ -476,6 +477,7 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
       return;
     }
     this.lastPush = undefined;
+    this.startPercentage = undefined;
     this.slider?.setPointerCapture(event.pointerId);
   }
 
@@ -526,6 +528,16 @@ export class SliderButtonCard extends LitElement implements LovelaceCard {
     if (!this.slider?.hasPointerCapture(event.pointerId)) return;
     const {left, top, width, height} = this.slider?.getBoundingClientRect();
     const percentage = this.ctrl.moveSlider(event, {left, top, width, height});
+
+    if (this.startPercentage === undefined) {
+      this.startPercentage = percentage;
+    }
+
+    // the value below is just kind of a "this feels right on multiple devices" value
+    if (Math.abs(percentage - this.startPercentage) < 0.5) {
+      return;
+    }
+
     this.ctrl.log('onPointerMove', percentage);
     
     this.updateValue(percentage);
