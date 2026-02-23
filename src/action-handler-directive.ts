@@ -1,9 +1,11 @@
-import { directive, PropertyPart } from 'lit-html';
+import { directive, DirectiveParameters, ElementPart } from 'lit/directive';
+import { noChange } from 'lit';
+import { Directive } from 'lit/directive.js';
 
 import { ActionHandlerDetail, ActionHandlerOptions } from 'custom-card-helpers/dist/types';
 import { fireEvent } from 'custom-card-helpers';
 
-const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
 interface ActionHandler extends HTMLElement {
   holdTime: number;
@@ -161,7 +163,6 @@ class ActionHandler extends HTMLElement implements ActionHandler {
   }
 }
 
-// TODO You need to replace all instances of "action-handler-boilerplate" with "action-handler-<your card name>"
 customElements.define('action-handler-slider-button', ActionHandler);
 
 const getActionHandler = (): ActionHandler => {
@@ -184,6 +185,18 @@ export const actionHandlerBind = (element: ActionHandlerElement, options: Action
   actionhandler.bind(element, options);
 };
 
-export const actionHandler = directive((options: ActionHandlerOptions = {}) => (part: PropertyPart): void => {
-  actionHandlerBind(part.committer.element as ActionHandlerElement, options);
-});
+class ActionHandlerDirective extends Directive {
+  render(_options?: ActionHandlerOptions): typeof noChange {
+    return noChange;
+  }
+
+  update(part: ElementPart | any, [options]: DirectiveParameters<this>) {
+    const element = part.element || part.committer?.element;
+    if (element) {
+      actionHandlerBind(element as ActionHandlerElement, options || {});
+    }
+    return noChange;
+  }
+}
+
+export const actionHandler = directive(ActionHandlerDirective);

@@ -57,6 +57,7 @@ export interface SliderConfig {
 export enum ActionButtonMode {
   TOGGLE = 'toggle',
   CUSTOM = 'custom',
+  DEFAULT = 'default',
 }
 
 export enum SliderDirections {
@@ -86,16 +87,13 @@ export enum Domain {
   CLIMATE = 'climate',
   LOCK = 'lock',
   AUTOMATION = 'automation',
+  TIMER = 'timer',
 }
 
 export const ActionButtonConfigDefault: ActionButtonConfig = {
-  mode: ActionButtonMode.TOGGLE,
-  icon: 'mdi:power',
+  mode: ActionButtonMode.DEFAULT,
   show: true,
   show_spinner: true,
-  tap_action: {
-    action: 'toggle'
-  },
 };
 
 export const IconConfigDefault: IconConfig = {
@@ -210,6 +208,16 @@ export const SliderConfigDefaultDomain: Map<string, SliderConfig> = new Map([
   [Domain.CLIMATE, {
     direction: SliderDirections.LEFT_RIGHT,
     background: SliderBackground.TRIANGLE,
+    use_state_color: false,
+    use_percentage_bg_opacity: false,
+    show_track: true,
+    toggle_on_click: false,
+    force_square: false,
+    show_attribute: false,
+  }],
+  [Domain.TIMER, {
+    direction: SliderDirections.LEFT_RIGHT,
+    background: SliderBackground.SOLID,
     use_state_color: false,
     use_percentage_bg_opacity: false,
     show_track: true,

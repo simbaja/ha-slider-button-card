@@ -1,7 +1,9 @@
-import { computeStateDomain, domainIcon, HomeAssistant } from 'custom-card-helpers';
+import { ActionConfig, computeStateDomain, domainIcon, handleAction, HomeAssistant } from 'custom-card-helpers';
 import { HassEntity } from 'home-assistant-js-websocket';
-import { SliderBackground, SliderButtonCardConfig, SliderDirections } from '../types';
+import { ActionButtonConfig, SliderBackground, SliderButtonCardConfig, SliderDirections } from '../types';
 import { getLightColorBasedOnTemperature, normalize, percentageToValue, toPercentage } from '../utils';
+
+import { ReactiveController, ReactiveControllerHost } from 'lit';
 
 export interface Style {
   icon: ObjectStyle;
@@ -14,9 +16,10 @@ export interface ObjectStyle {
   rotateSpeed?: string;
 }
 
-export abstract class Controller {
+export abstract class Controller implements ReactiveController {
   _config: SliderButtonCardConfig;
   _hass: any;
+  _host: ReactiveControllerHost;
   _sliderPrevColor = '';
 
   abstract _value?: number;
@@ -26,14 +29,27 @@ export abstract class Controller {
   abstract _step?: number;
   abstract _invert?: boolean;
 
-  protected constructor(config: SliderButtonCardConfig) {
+  private _isSliderDragging = false;
+
+  protected constructor(config: SliderButtonCardConfig, host: ReactiveControllerHost) {
     this._config = config;
+    this._host = host;
+    host.addController(this);
+  }
+  
+  hostConnected?(): void {}
+  hostDisconnected?(): void {}
+  hostUpdated?(): void {}
+  
+  protected requestUpdate(): void {
+    this._host.requestUpdate();
   }
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
   }
 
+  // TODO: This isn't null safe can causing a bunch of downstream typing & runtime errors
   get stateObj(): any {
     return this._hass.states[this._config.entity] as HassEntity;
   }
@@ -63,15 +79,12 @@ export abstract class Controller {
   set value(value: number) {
     if (value !== this.value) {
       this._value = value;
-      // this._value = Math.round(value / this.step) * this.step;
+      this.requestUpdate();
     }
   }
 
   get targetValue(): number {
-    if (this._targetValue === 0) {
-      return 0;
-    }
-    if (this._targetValue) {
+    if (this._targetValue !== undefined) {
       return Math.round(this._targetValue / this.step) * this.step;
     }
     if (this.value) {
@@ -80,10 +93,14 @@ export abstract class Controller {
     return 0;
   }
 
+  resetTargetValue(): void {
+    this._targetValue = undefined;
+  }
+
   set targetValue(value: number) {
     if (value !== this.targetValue) {
       this._targetValue = value;
-      // this._targetValue = Math.round(value / this.step) * this.step;
+      this.requestUpdate();
     }
   }
 
@@ -139,6 +156,7 @@ export abstract class Controller {
   }
 
   get step(): number {
+    // TODO: There is no such thing as a step value under slider config.
     return this._config.slider?.step ?? this._step ?? 5;
   }
 
@@ -150,10 +168,13 @@ export abstract class Controller {
     return true;
   }
 
+  // TODO: It's a bit unclear percentage & targetValue are used for temporary slider values while it's 
+  // being dragged around. These variables could be renamed to clarify.
+
   get percentage(): number {
-    return Math.round(
-      ((this.targetValue - (this.invert ? this.max : this.min)) * 100) / (this.max - this.min) * (this.invert ? -1 : 1)
-    );
+    const percentage = ((this.targetValue - (this.invert ? this.max : this.min)) * 100) / (this.max - this.min) * (this.invert ? -1 : 1)
+    // Round to 1 decimal place for a smoother slider
+    return Math.round(percentage * 10) / 10;
   }
 
   get valueFromPercentage(): number {
@@ -192,7 +213,7 @@ export abstract class Controller {
         if (sat > 10) {
           return `hsl(${hue}, 100%, ${100 - sat / 2}%)`;
         }
-      } else if (this.percentage > 0) {
+      } else if (this.invert ? this.percentage < 100 : this.percentage > 0) {
         return 'var(--paper-item-icon-active-color, #fdd835)'
       } else {
         return 'var(--paper-item-icon-color, #44739e)'
@@ -238,6 +259,24 @@ export abstract class Controller {
       }
     }
     return 'inherit';
+  }
+  
+  get actionIcon(): string {
+    return '';
+  }
+  
+  // TODO: Wire up default action for all controller types
+  get defaultAction(): Parameters<typeof handleAction>[2] | undefined {
+    return undefined;
+  }
+
+  get secondaryActionIcon(): string {
+    return '';
+  }
+
+  // TODO: Wire up default secondary action for all controller types
+  get defaultSecondaryAction(): Parameters<typeof handleAction>[2] | undefined {
+    return undefined;
   }
 
   moveSlider(event: any, {left, top, width, height}): number {
@@ -306,5 +345,13 @@ export abstract class Controller {
     if (this._config.debug) {
       console.log(`${this._config.entity}: ${name}`, value)
     }
+  }
+
+  get isSliderDragging(): boolean {
+    return this._isSliderDragging;
+  }
+
+  set isSliderDragging(value: boolean) {
+    this._isSliderDragging = value;
   }
 }
