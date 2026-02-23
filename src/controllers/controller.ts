@@ -16,11 +16,43 @@ export interface ObjectStyle {
   rotateSpeed?: string;
 }
 
+class EmittedContexts {
+  _emittedContexts = new Set();
+  _tracker: Array<string>;
+  _cursor = 0;
+
+  constructor(capacity = 50) {
+    this._tracker = new Array(capacity);
+  }
+
+  addContext(context: string): void {
+    this._emittedContexts.add(context);
+
+    const existingValue = this._tracker[this._cursor];
+    if (existingValue != undefined) {
+      this.popContext(existingValue);
+    }
+
+    this._tracker[this._cursor] = context;
+    this._cursor++;
+    if (this._cursor >= this._tracker.length) {
+      this._cursor = 0;
+    }
+  }
+
+  popContext(context: string): boolean {
+    return this._emittedContexts.delete(context);
+  }
+}
+
 export abstract class Controller implements ReactiveController {
   _config: SliderButtonCardConfig;
   _hass: any;
   _host: ReactiveControllerHost;
   _sliderPrevColor = '';
+  _emittedContexts = new EmittedContexts();
+  _lastPromiseID = 0;
+  _pendingPromises = new Set();
 
   abstract _value?: number;
   abstract _targetValue?: number;
@@ -337,12 +369,29 @@ export abstract class Controller implements ReactiveController {
     return percentage;
   }
 
+  hasPendingPromises(): boolean {
+    return this._pendingPromises.size > 0;
+  }
+
+  checkSelfEmitted(): boolean {
+    return this._emittedContexts.popContext(this.stateObj?.context?.id);
+  }
+
   applyStep(value: number): number {
     return  Math.round(value / this.step) * this.step;
   }
 
-  log(name = '', value: string | number | object = ''): void {
-    if (this._config.debug) {
+  callService(domain: string, service: string, data: object): void {
+    const promiseID = ++this._lastPromiseID;
+    this._pendingPromises.add(promiseID);
+    this._hass.callService(domain, service, data).then((val) => {
+      this._emittedContexts.addContext(val?.context?.id);
+      this._pendingPromises.delete(promiseID);
+    });
+  }
+
+  log(name = '', value: string | number | object = '', force = false): void {
+    if (this._config.debug || force) {
       console.log(`${this._config.entity}: ${name}`, value)
     }
   }

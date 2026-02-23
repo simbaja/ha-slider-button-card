@@ -289,6 +289,13 @@ export class SliderButtonCardEditor extends ScopedRegistryHost(LitElement) imple
                     @change=${this._valueChanged}
                   ></mwc-switch>
                 </mwc-formfield>
+                <mwc-formfield .label=${localize('tabs.slider.change_during_slide')}>
+                  <mwc-switch
+                    .checked=${this._slider.change_during_slide}
+                    .configValue=${'slider.change_during_slide'}
+                    @change=${this._valueChanged}
+                  ></mwc-switch>
+                </mwc-formfield>
               </div>
             </div>
           </div>

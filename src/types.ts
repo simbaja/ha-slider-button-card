@@ -52,6 +52,8 @@ export interface SliderConfig {
   toggle_on_click?: boolean;
   invert?: boolean;
   force_square: boolean;
+  change_during_slide: boolean;
+  change_during_slide_rate: number;
 }
 
 export enum ActionButtonMode {
@@ -112,6 +114,8 @@ export const SliderConfigDefault: SliderConfig = {
   show_track: false,
   toggle_on_click: false,
   force_square: false,
+  change_during_slide: false,
+  change_during_slide_rate: 300
 };
 
 export const SliderConfigDefaultDomain: Map<string, SliderConfig> = new Map([
@@ -124,6 +128,8 @@ export const SliderConfigDefaultDomain: Map<string, SliderConfig> = new Map([
     toggle_on_click: false,
     force_square: false,
     show_attribute: false,
+    change_during_slide: false,
+    change_during_slide_rate: 300
   }],
   [Domain.FAN, {
     direction: SliderDirections.LEFT_RIGHT,
@@ -134,6 +140,8 @@ export const SliderConfigDefaultDomain: Map<string, SliderConfig> = new Map([
     toggle_on_click: false,
     force_square: false,
     show_attribute: false,
+    change_during_slide: false,
+    change_during_slide_rate: 300
   }],
   [Domain.SWITCH, {
     direction: SliderDirections.LEFT_RIGHT,
@@ -144,6 +152,8 @@ export const SliderConfigDefaultDomain: Map<string, SliderConfig> = new Map([
     toggle_on_click: true,
     force_square: false,
     show_attribute: false,
+    change_during_slide: false,
+    change_during_slide_rate: 300
   }],
   [Domain.AUTOMATION, {
     direction: SliderDirections.LEFT_RIGHT,
@@ -153,6 +163,9 @@ export const SliderConfigDefaultDomain: Map<string, SliderConfig> = new Map([
     show_track: false,
     toggle_on_click: true,
     force_square: false,
+    show_attribute: false,
+    change_during_slide: false,
+    change_during_slide_rate: 300
   }],
   [Domain.COVER, {
     direction: SliderDirections.TOP_BOTTOM,
@@ -164,6 +177,8 @@ export const SliderConfigDefaultDomain: Map<string, SliderConfig> = new Map([
     force_square: false,
     invert: true,
     show_attribute: false,
+    change_during_slide: false,
+    change_during_slide_rate: 300
   }],
   [Domain.INPUT_BOOLEAN, {
     direction: SliderDirections.LEFT_RIGHT,
@@ -174,6 +189,8 @@ export const SliderConfigDefaultDomain: Map<string, SliderConfig> = new Map([
     toggle_on_click: true,
     force_square: false,
     show_attribute: false,
+    change_during_slide: false,
+    change_during_slide_rate: 300
   }],
   [Domain.INPUT_NUMBER, {
     direction: SliderDirections.LEFT_RIGHT,
@@ -183,6 +200,9 @@ export const SliderConfigDefaultDomain: Map<string, SliderConfig> = new Map([
     show_track: false,
     toggle_on_click: false,
     force_square: false,
+    show_attribute: false,
+    change_during_slide: false,
+    change_during_slide_rate: 300
   }],
   [Domain.MEDIA_PLAYER, {
     direction: SliderDirections.LEFT_RIGHT,
@@ -194,6 +214,8 @@ export const SliderConfigDefaultDomain: Map<string, SliderConfig> = new Map([
     force_square: false,
     show_attribute: true,
     attribute: "media_title",
+    change_during_slide: false,
+    change_during_slide_rate: 300
   }],
   [Domain.LOCK, {
     direction: SliderDirections.LEFT_RIGHT,
@@ -204,6 +226,8 @@ export const SliderConfigDefaultDomain: Map<string, SliderConfig> = new Map([
     toggle_on_click: true,
     force_square: false,
     show_attribute: false,
+    change_during_slide: false,
+    change_during_slide_rate: 300
   }],
   [Domain.CLIMATE, {
     direction: SliderDirections.LEFT_RIGHT,
@@ -214,6 +238,8 @@ export const SliderConfigDefaultDomain: Map<string, SliderConfig> = new Map([
     toggle_on_click: false,
     force_square: false,
     show_attribute: false,
+    change_during_slide: false,
+    change_during_slide_rate: 300
   }],
   [Domain.TIMER, {
     direction: SliderDirections.LEFT_RIGHT,
@@ -224,6 +250,8 @@ export const SliderConfigDefaultDomain: Map<string, SliderConfig> = new Map([
     toggle_on_click: false,
     force_square: false,
     show_attribute: false,
+    change_during_slide: false,
+    change_during_slide_rate: 300
   }],
 ]);
 
