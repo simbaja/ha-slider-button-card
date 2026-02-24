@@ -2,19 +2,18 @@ import { STATES_OFF } from 'custom-card-helpers';
 import { capitalizeFirst } from '../utils';
 import { Controller } from './controller';
 
-export class ClimateController extends Controller {
-   _targetValue;
+export class HumidifierController extends Controller {
+  _targetValue;
   _invert = false;
 
   get _value(): number {
-    return this.stateObj.attributes.temperature;
+    return this.stateObj.attributes.humidity;
   }
 
   set _value(value) {
-    this.callService('climate', 'set_temperature', {
-
+    this.callService('humidifier', 'set_humidity', {
       entity_id: this.stateObj.entity_id,
-      temperature: value,
+      humidity: value,
     });
   }
 
@@ -23,23 +22,23 @@ export class ClimateController extends Controller {
   }
 
   get _step(): number {
-    return this.stateObj.attributes?.target_temp_step || 1;
+    return 1;
   }
 
   get _min(): number {
-    return this.stateObj.attributes?.min_temp || 7;
+    return this.stateObj.attributes?.min_humidity || 0;
   }
 
   get _max(): number {
-    return this.stateObj.attributes?.max_temp || 35;
+    return this.stateObj.attributes?.max_humidity || 100;
   }
 
   get isValuePercentage(): boolean {
-    return false;
+    return true;
   }
 
   get unit(): string {
-    return this._hass.config.unit_system.temperature;
+    return '%';
   }
 
   get label(): string {

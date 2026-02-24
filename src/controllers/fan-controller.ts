@@ -16,13 +16,13 @@ export class FanController extends Controller {
     const service = value > 0 ? 'turn_on' : 'turn_off';
     if (value > 0 && this.hasSlider) {
       this.callService('fan', 'set_percentage', {
-        // eslint-disable-next-line @typescript-eslint/camelcase
+
         entity_id: this.stateObj.entity_id,
         percentage: value
       });
     } else {
       this.callService('fan', service, {
-        // eslint-disable-next-line @typescript-eslint/camelcase
+
         entity_id: this.stateObj.entity_id
       });
     }
@@ -32,10 +32,17 @@ export class FanController extends Controller {
     return this.hasSlider ? this.stateObj.attributes.percentage_step : 1;
   }
 
+  get unit(): string {
+    if (this.percentage > 0 && this.hasSlider) {
+      return '%';
+    }
+    return '';
+  }
+
   get label(): string {
     if (this.percentage > 0) {
       if (this.hasSlider) {
-        return `${this.percentage}%`
+        return `${this.percentage}`
       } else {
         return this._hass.localize('component.fan.entity_component._.state.on');
       }

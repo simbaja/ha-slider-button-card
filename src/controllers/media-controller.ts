@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/camelcase */
+
 import { Controller } from './controller';
 
 export class MediaController extends Controller {
@@ -31,10 +31,15 @@ export class MediaController extends Controller {
     return this.stateObj.state === 'off';
   }
 
+  get unit(): string {
+    if (this.stateObj.attributes.is_volume_muted) return '';
+    return !!this.stateObj.attributes.volume_level ? '%' : '';
+  }
+
   get label(): string {
     if (this.stateObj.attributes.is_volume_muted) return '-';
     return !!this.stateObj.attributes.volume_level
-      ? `${this.percentage}%`
+      ? `${this.percentage}`
       : this._hass.localize(`component.media_player.state._.${this.state}`);
   }
 

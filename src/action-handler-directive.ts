@@ -1,14 +1,17 @@
-
-
 import { ActionHandlerDetail, ActionHandlerOptions } from 'custom-card-helpers/dist/types';
 import { fireEvent } from 'custom-card-helpers';
+import { RippleBase } from '@material/mwc-ripple/mwc-ripple-base.js';
+import { styles as rippleStyles } from '@material/mwc-ripple/mwc-ripple.css.js';
 
+if (!customElements.get('mwc-ripple')) {
+  customElements.define('mwc-ripple', class extends RippleBase {
+    static get styles() {
+      return [rippleStyles];
+    }
+  });
+}
 const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || ((navigator as unknown as { msMaxTouchPoints?: number }).msMaxTouchPoints || 0) > 0;
 
-interface ActionHandler extends HTMLElement {
-  holdTime: number;
-  bind(element: Element, options): void;
-}
 interface ActionHandlerElement extends HTMLElement {
   actionHandler?: boolean;
 }
@@ -19,7 +22,7 @@ declare global {
   }
 }
 
-class ActionHandler extends HTMLElement implements ActionHandler {
+class ActionHandler extends HTMLElement {
   public holdTime = 500;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

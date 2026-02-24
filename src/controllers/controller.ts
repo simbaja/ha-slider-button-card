@@ -61,6 +61,61 @@ export abstract class Controller implements ReactiveController {
   abstract _step?: number;
   abstract _invert?: boolean;
 
+  _originalValue?: number;
+  _originalValueLock?: boolean;
+  _clickPosition?: number;
+  _clickPositionLock?: boolean;
+
+  set originalValue(value: number) {
+    this._originalValue = value;
+  }
+
+  get originalValue(): number {
+    if (this._originalValue === 0) {
+      return 0;
+    }
+    if (this._originalValue) {
+      return Math.round(this._originalValue / this.step) * this.step;
+    }
+    return 0;
+  }
+
+  get originalValueLock(): boolean {
+    if (this._originalValueLock === true) {
+      return true;
+    }
+    return false;
+  }
+
+  set originalValueLock(lock: boolean) {
+    this._originalValueLock = lock;
+  }
+
+  set clickPosition(value: number) {
+    this._clickPosition = value;
+  }
+
+  get clickPosition(): number {
+    if (this._clickPosition === 0) {
+      return 0;
+    }
+    if (this._clickPosition) {
+      return Math.round(this._clickPosition / this.step) * this.step;
+    }
+    return 0;
+  }
+
+  get clickPositionLock(): boolean {
+    if (this._clickPositionLock === true) {
+      return true;
+    }
+    return false;
+  }
+
+  set clickPositionLock(lock: boolean) {
+    this._clickPositionLock = lock;
+  }
+
   private _isSliderDragging = false;
 
   protected constructor(config: SliderButtonCardConfig, host: ReactiveControllerHost) {
@@ -138,6 +193,10 @@ export abstract class Controller implements ReactiveController {
 
   get label(): string {
     return `${this.targetValue}`;
+  }
+
+  get unit(): string {
+    return this.stateObj?.attributes?.unit_of_measurement || '';
   }
 
   get attributeLabel(): string {
@@ -314,7 +373,7 @@ export abstract class Controller implements ReactiveController {
   moveSlider(event: any, {left, top, width, height}): number {
     let percentage = this.calcMovementPercentage(event, {left, top, width, height});
     percentage = this.applyStep(percentage);
-    percentage = normalize(percentage, 0, 100);
+    // percentage = normalize(percentage, 0, 100);
     if (!this.isValuePercentage) {
       percentage = percentageToValue(percentage, this.min, this.max);
     }

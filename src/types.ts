@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/camelcase */
+
 import { ActionConfig, LovelaceCard, LovelaceCardConfig, LovelaceCardEditor } from 'custom-card-helpers';
 
 declare global {
@@ -22,6 +22,8 @@ export interface SliderButtonCardConfig extends LovelaceCardConfig {
   theme?: string;
   debug?: boolean;
   compact?: boolean;
+  styles?: string;
+  height?: string;
 }
 
 export interface ActionButtonConfig {
@@ -90,6 +92,7 @@ export enum Domain {
   LOCK = 'lock',
   AUTOMATION = 'automation',
   TIMER = 'timer',
+  HUMIDIFIER = 'humidifier',
 }
 
 export const ActionButtonConfigDefault: ActionButtonConfig = {
@@ -244,6 +247,18 @@ export const SliderConfigDefaultDomain: Map<string, SliderConfig> = new Map([
   [Domain.TIMER, {
     direction: SliderDirections.LEFT_RIGHT,
     background: SliderBackground.SOLID,
+    use_state_color: false,
+    use_percentage_bg_opacity: false,
+    show_track: true,
+    toggle_on_click: false,
+    force_square: false,
+    show_attribute: false,
+    change_during_slide: false,
+    change_during_slide_rate: 300
+  }],
+  [Domain.HUMIDIFIER, {
+    direction: SliderDirections.LEFT_RIGHT,
+    background: SliderBackground.TRIANGLE,
     use_state_color: false,
     use_percentage_bg_opacity: false,
     show_track: true,
